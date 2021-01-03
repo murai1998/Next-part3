@@ -1,12 +1,20 @@
 import Layout from '../components/layout'
+import {  useSession } from 'next-auth/client'
 
-export default function Page () {
+export default function Page (props) {
+  const [ session, loading ] = useSession()
+  console.log('This props', session)
   return (
+    
     <Layout>
-      <h1>NextAuth.js Example</h1>
-      <p>
-        This is an example site to demonstrate how to use <a href={`https://next-auth.js.org`}>NextAuth.js</a> for authentication.
-      </p>
+  { session !== undefined   ? 
+    <>
+     <p>Hi, </p>
+     <p>We are very happy you have jouned us. Welcome!</p>
+     </>
+     : ('')
+  }
     </Layout>
+    
   )
 }
