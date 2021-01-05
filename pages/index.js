@@ -6,7 +6,6 @@ import { signIn, signOut, useSession } from 'next-auth/client'
 
 import React from 'react';
 import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -18,14 +17,19 @@ import Grid from '@material-ui/core/Grid';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import Button from '@material-ui/core/Button';
+
 
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}
-      <Link color="inherit" href="https://material-ui.com/">
+     
         NextStep
-      </Link>{' '}
+      
       {new Date().getFullYear()}
       {'.'}
     </Typography>
@@ -74,6 +78,7 @@ backgroundImage: 'url(https://images.unsplash.com/photo-1607175589389-eded55c334
 export default function Page() {
   const [session, loading] = useSession()
   const classes = useStyles();
+  const bull = <span className={classes.bullet}>•</span>;
 
   if (loading) {
     return <p>Loading...</p>
@@ -111,7 +116,34 @@ export default function Page() {
             >
               Sign In
             </Button>
-           
+          
+           <Card>
+           <CardContent>
+        {/* <Typography className={classes.title} color="textSecondary" gutterBottom>
+          Word of the Day
+        </Typography> */}
+        <Typography variant="h5" component="h2">
+          Next{bull}Step
+        </Typography>
+        <Typography className={classes.pos} color="textSecondary">
+          adjective
+        </Typography>
+        <Typography variant="body2" component="p">
+        {bull}Great tool to build online surveys
+          <br />
+          <br/>
+          <Typography className={classes.pos} color="textSecondary">
+          <center>{'"REALIABLE, FAST, FREE"'}</center>
+        </Typography>
+        
+          <br/>
+          {bull}Place to find respondents for the surveys
+        </Typography>
+      </CardContent>
+      {/* <CardActions>
+        <Button size="small">Learn More</Button>
+      </CardActions> */}
+           </Card>
             <Box mt={5}>
               <Copyright />
             </Box>
@@ -125,14 +157,14 @@ export default function Page() {
       )}
 
 
- {/* {session && (
+ {session && (
       
          <Layout>
           <p>Hi, {session.user.name} </p>
           <p>We are very happy you have jouned us. Welcome!</p>
           </Layout>
          
-      )}  */}
+      )} 
 
 
       
