@@ -21,6 +21,7 @@ import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
+import { AutoComplete } from 'antd';
 
 
 function Copyright() {
@@ -38,8 +39,7 @@ function Copyright() {
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    height: '100vh',
-   
+    height: '100vh'
   },
   image: {
     //backgroundImage: 'url(https://source.unsplash.com/random)',
@@ -52,11 +52,12 @@ backgroundImage: 'url(https://images.unsplash.com/photo-1607175589389-eded55c334
    
   },
   paper: {
-    margin: theme.spacing(12, 2),
+margin: theme.spacing(10, 2),
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    
+   
+
     
   },
   avatar: {
@@ -70,6 +71,9 @@ backgroundImage: 'url(https://images.unsplash.com/photo-1607175589389-eded55c334
   submit: {
     margin: theme.spacing(2, 0, 2),
   },
+  part2: {
+    margin: 'auto'
+  }
 }));
 
 
@@ -88,7 +92,7 @@ export default function Page() {
     <>
         
       {!session && (
-        <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', margin: 0, padding: 0}}>
+        <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', margin: 'auto', padding: 'auto'}}>
           {/* Not signed in <br />
           <button onClick={signIn}>Sign in</button> */}
 
@@ -96,7 +100,7 @@ export default function Page() {
 
       <Grid item xs={false} sm={4} md={7} className={classes.image} />
       <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
-        <div className={classes.paper}>
+        <div  className={classes.paper}>
           <Avatar className={classes.avatar}>
             <LockOutlinedIcon />
           </Avatar>
@@ -128,12 +132,12 @@ export default function Page() {
         <Typography className={classes.pos} color="textSecondary">
           adjective
         </Typography>
-        <Typography variant="body2" component="p">
+        <Typography variant="body2" component="div">
         {bull}Great tool to build online surveys
           <br />
           <br/>
-          <Typography className={classes.pos} color="textSecondary">
-          <center>{'"REALIABLE, FAST, FREE"'}</center>
+          <Typography align='center' className={classes.pos} color="textSecondary">
+ {'"REALIABLE, FAST, FREE"'}
         </Typography>
         
           <br/>
