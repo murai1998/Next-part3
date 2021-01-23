@@ -15,8 +15,11 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import ShareIcon from '@material-ui/icons/Share';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import TextField from '@material-ui/core/TextField';
-
+import AddCircleOutlineOutlinedIcon from '@material-ui/icons/AddCircleOutlineOutlined';
 import Layout from '../components/layout'
+import Tooltip from '@material-ui/core/Tooltip';
+import DeleteOutlineOutlinedIcon from '@material-ui/icons/DeleteOutlineOutlined';
+import SpeakerNotesOutlinedIcon from '@material-ui/icons/SpeakerNotesOutlined';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -57,22 +60,29 @@ export default function RecipeReviewCard() {
         title=   {<TextField defaultValue="Form #" id="standard-search"  type="search"         helperText="Title" />}
 
       />
-      
+
       <CardMedia
         className={classes.media}
         image="/static/images/cards/paella.jpg"
-        title="Paella dish"
       />
-      <CardContent>
-        <Typography variant="body2" color="textSecondary" component="p">
-          This impressive paella is a perfect party dish and a fun meal to cook together with your
-          guests. Add 1 cup of frozen peas along with the mussels, if you like.
-        </Typography>
-      </CardContent>
-      <CardActions disableSpacing>
-        <IconButton aria-label="add to favorites">
-          <FavoriteIcon />
+       <CardActions disableSpacing>
+       <Tooltip title='Add Question'>
+        <IconButton>
+          <AddCircleOutlineOutlinedIcon title="Add"/>
         </IconButton>
+        </Tooltip>
+        <Tooltip title='Delete Form'>
+        <IconButton>
+          <DeleteOutlineOutlinedIcon/>
+        </IconButton>
+        </Tooltip>
+        <Tooltip title='Add comment'>
+        <IconButton>
+          <SpeakerNotesOutlinedIcon/>
+        </IconButton>
+        </Tooltip>
+       
+
         <IconButton aria-label="share">
           <ShareIcon />
         </IconButton>
@@ -87,6 +97,13 @@ export default function RecipeReviewCard() {
           <ExpandMoreIcon />
         </IconButton>
       </CardActions>
+      <CardContent>
+        <Typography variant="body2" color="textSecondary" component="p">
+          This impressive paella is a perfect party dish and a fun meal to cook together with your
+          guests. Add 1 cup of frozen peas along with the mussels, if you like.
+        </Typography>
+      </CardContent>
+     
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
           <Typography paragraph>Method:</Typography>
