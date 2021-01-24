@@ -21,6 +21,7 @@
     "next-auth": "^3.1.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-id-generator": "^3.0.1",
     "react-survey": "^1.7.0",
     "sqlite3": "^4.2.0"
   }

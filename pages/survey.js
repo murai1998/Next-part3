@@ -25,7 +25,9 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-import { SentimentSatisfied } from '@material-ui/icons';
+import nextId from "react-id-generator";
+import { useId } from "react-id-generator";
+import ClearOutlinedIcon from '@material-ui/icons/ClearOutlined';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -55,7 +57,7 @@ export default function RecipeReviewCard() {
   const [expanded, setExpanded] = React.useState(false);
   const [type, setType] = useState('')
   const [questions, setQuestions] = useState([])
-
+  const [htmlId] = useId();
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
@@ -63,13 +65,14 @@ export default function RecipeReviewCard() {
 
   const Question = ()=>{
 return questions.map((x, i)=>{
-return <Card key={i}  variant="outlined">
+return <Card key={x.id}  variant="outlined">
 <CardHeader
-title=   {<TextField defaultValue="Qeustion" id="standard-search"  type="search" helperText="Question" />}
+
+title={<TextField defaultValue={x.quest} id="standard-search" onChange={(e)=>setQuestions(e, x.id)}  type="search" helperText="Question" />}
 />
 <FormControl>
   <Select
-    value='type'
+    value={x.type}
     // onChange={handleType}
     displayEmpty
     className={classes.selectEmpty}
@@ -83,7 +86,7 @@ title=   {<TextField defaultValue="Qeustion" id="standard-search"  type="search"
     <MenuItem value='short'>Short Answer</MenuItem>
     <MenuItem value='long'>Long answer</MenuItem>
   </Select>
-  <FormHelperText>Placeholder</FormHelperText>
+  <FormHelperText>Select Type of Response</FormHelperText>
 </FormControl>
 </Card>
 
@@ -96,29 +99,14 @@ title=   {<TextField defaultValue="Qeustion" id="standard-search"  type="search"
   const addQuestion =()=>{
       console.log('Clicked')
       let all_q = [...questions];
-      all_q.push(<Card   variant="outlined">
-      <CardHeader
-      title=   {<TextField defaultValue="Qeustion" id="standard-search"  type="search" helperText="Question" />}
-      />
-      <FormControl>
-        <Select
-          value='type'
-          // onChange={handleType}
-          displayEmpty
-          className={classes.selectEmpty}
-          inputProps={{ 'aria-label': 'Without label' }}
-        >
-          <MenuItem value="" disabled>
-           Select type of the response
-          </MenuItem>
-          <MenuItem value='multiple'>Multiple choices</MenuItem>
-          <MenuItem value='check'>Check boxes</MenuItem>
-          <MenuItem value='short'>Short Answer</MenuItem>
-          <MenuItem value='long'>Long answer</MenuItem>
-        </Select>
-        <FormHelperText>Placeholder</FormHelperText>
-      </FormControl>
-      </Card>)
+      let new_obj = {
+          id: nextId(),
+          quest: '???',
+          type: 'check',
+          answer: []
+      }
+  console.log('ID', nextId())
+      all_q.push(new_obj)
       setQuestions(all_q)
   }
 
@@ -126,7 +114,6 @@ title=   {<TextField defaultValue="Qeustion" id="standard-search"  type="search"
       <Layout>
     <Card className={classes.root}>
       <CardHeader
-
         title=   {<TextField defaultValue="Form #" id="standard-search"  type="search"         helperText="Title" />}
 
       />
