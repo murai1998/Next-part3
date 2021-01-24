@@ -58,31 +58,54 @@ export default function RecipeReviewCard() {
   const [type, setType] = useState('')
   const [questions, setQuestions] = useState([])
   const [htmlId] = useId();
+  const [id, setId] = useState(0)
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
 
+  const changeQuestion =(e, id)=>{
+console.log('ID', id)
+let all_q = [...questions]
+let index = 0;
+let found = []
+found = all_q.filter((x, i) =>{
+if(x.id === id){
+    index = i;
+    return x;
+}
+})
+
+if(found.length > 0){
+    found[0].quest = e.target.value;
+    console.log(found[0])
+    all_q.splice(index, 1, found[0])
+    setTimeout(()=> setQuestions(all_q), 5000)
+
+}
+  }
 
   const Question = ()=>{
 return questions.map((x, i)=>{
-return <Card key={x.id}  variant="outlined">
+
+return <Card key={i}  variant="outlined">
 <CardHeader
 
-title={<TextField defaultValue={x.quest} id="standard-search" onChange={(e)=>setQuestions(e, x.id)}  type="search" helperText="Question" />}
+title={<TextField defaultValue={x.quest}  id="standard-search" onChange={(e)=>changeQuestion(e, x.id)}  type="search" helperText="Question" />}
 />
 <FormControl>
   <Select
-    value={x.type}
+    defaultValue={x.type}
     // onChange={handleType}
     displayEmpty
     className={classes.selectEmpty}
     inputProps={{ 'aria-label': 'Without label' }}
   >
     <MenuItem value="" disabled>
-     Select type of the response
+     Select type of the response 
     </MenuItem>
-    <MenuItem value='multiple'>Multiple choices</MenuItem>
-    <MenuItem value='check'>Check boxes</MenuItem>
+    <MenuItem value='one'>Multiple choices with 1 right answer</MenuItem>
+    <MenuItem value='several'>Multiple choices with several anwers</MenuItem>
+
     <MenuItem value='short'>Short Answer</MenuItem>
     <MenuItem value='long'>Long answer</MenuItem>
   </Select>
@@ -91,21 +114,19 @@ title={<TextField defaultValue={x.quest} id="standard-search" onChange={(e)=>set
 </Card>
 
 })
-
-
   }
 
 
   const addQuestion =()=>{
-      console.log('Clicked')
       let all_q = [...questions];
       let new_obj = {
-          id: nextId(),
+          id: id,
           quest: '???',
-          type: 'check',
+          type: 'one',
           answer: []
       }
-  console.log('ID', nextId())
+      let new_id = id;
+      setId(new_id + 1)
       all_q.push(new_obj)
       setQuestions(all_q)
   }
