@@ -1,4 +1,4 @@
-import React from 'react';
+import React,  { useState, useEffect} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
 import Card from '@material-ui/core/Card';
@@ -20,6 +20,12 @@ import Layout from '../components/layout'
 import Tooltip from '@material-ui/core/Tooltip';
 import DeleteOutlineOutlinedIcon from '@material-ui/icons/DeleteOutlineOutlined';
 import SpeakerNotesOutlinedIcon from '@material-ui/icons/SpeakerNotesOutlined';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+import { SentimentSatisfied } from '@material-ui/icons';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -47,10 +53,74 @@ const useStyles = makeStyles((theme) => ({
 export default function RecipeReviewCard() {
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState(false);
+  const [type, setType] = useState('')
+  const [questions, setQuestions] = useState([])
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
+
+
+  const Question = ()=>{
+return questions.map((x, i)=>{
+return <Card key={i}  variant="outlined">
+<CardHeader
+title=   {<TextField defaultValue="Qeustion" id="standard-search"  type="search" helperText="Question" />}
+/>
+<FormControl>
+  <Select
+    value='type'
+    // onChange={handleType}
+    displayEmpty
+    className={classes.selectEmpty}
+    inputProps={{ 'aria-label': 'Without label' }}
+  >
+    <MenuItem value="" disabled>
+     Select type of the response
+    </MenuItem>
+    <MenuItem value='multiple'>Multiple choices</MenuItem>
+    <MenuItem value='check'>Check boxes</MenuItem>
+    <MenuItem value='short'>Short Answer</MenuItem>
+    <MenuItem value='long'>Long answer</MenuItem>
+  </Select>
+  <FormHelperText>Placeholder</FormHelperText>
+</FormControl>
+</Card>
+
+})
+
+
+  }
+
+
+  const addQuestion =()=>{
+      console.log('Clicked')
+      let all_q = [...questions];
+      all_q.push(<Card   variant="outlined">
+      <CardHeader
+      title=   {<TextField defaultValue="Qeustion" id="standard-search"  type="search" helperText="Question" />}
+      />
+      <FormControl>
+        <Select
+          value='type'
+          // onChange={handleType}
+          displayEmpty
+          className={classes.selectEmpty}
+          inputProps={{ 'aria-label': 'Without label' }}
+        >
+          <MenuItem value="" disabled>
+           Select type of the response
+          </MenuItem>
+          <MenuItem value='multiple'>Multiple choices</MenuItem>
+          <MenuItem value='check'>Check boxes</MenuItem>
+          <MenuItem value='short'>Short Answer</MenuItem>
+          <MenuItem value='long'>Long answer</MenuItem>
+        </Select>
+        <FormHelperText>Placeholder</FormHelperText>
+      </FormControl>
+      </Card>)
+      setQuestions(all_q)
+  }
 
   return (
       <Layout>
@@ -67,8 +137,8 @@ export default function RecipeReviewCard() {
       />
        <CardActions disableSpacing>
        <Tooltip title='Add Question'>
-        <IconButton>
-          <AddCircleOutlineOutlinedIcon title="Add"/>
+        <IconButton onClick={addQuestion}>
+          <AddCircleOutlineOutlinedIcon />
         </IconButton>
         </Tooltip>
         <Tooltip title='Delete Form'>
@@ -97,6 +167,10 @@ export default function RecipeReviewCard() {
           <ExpandMoreIcon />
         </IconButton>
       </CardActions>
+
+     <Question/>
+
+
       <CardContent>
         <Typography variant="body2" color="textSecondary" component="p">
           This impressive paella is a perfect party dish and a fun meal to cook together with your
