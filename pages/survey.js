@@ -26,6 +26,7 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import Button from '@material-ui/core/Button';
+import CancelOutlinedIcon from '@material-ui/icons/CancelOutlined';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -80,6 +81,47 @@ if(found.length > 0){
 
 }
   }
+
+
+  const deleteQuestion =(e, id)=>{
+
+    let all_q = [...questions]
+    let found = []
+    found = all_q.filter(x => x.id !== id)
+    if(found.length > 0){
+       setQuestions(found)
+    
+    }
+      }
+
+
+    
+      const deleteAnswer = (e, id, double_id)=>{
+
+        let all_q = [...questions]
+    let index = 0;
+    let found = []
+    found = all_q.filter((x, i) =>{
+    if(x.id === id){
+        index = i;
+        return x;
+    }
+    })
+    console.log('ANFF', found)
+    if(found.length > 0){
+
+        let found2 = []
+        found2 = found[0].answer.filter(y => y.double_v !== double_id)
+       
+    console.log('jjjj', found2)
+found[0].answer = found2
+        all_q.splice(index, 1, found[0])
+        console.log('FFF', all_q)
+setQuestions(all_q)
+    
+    }
+
+      }
 
 
 
@@ -137,6 +179,11 @@ return <Card key={i}  variant="outlined">
 <CardHeader
 
 title={<TextField defaultValue={x.quest}  id="standard-search" onChange={(e)=>changeQuestion(e, x.id)}  type="search" helperText="Question" />}
+action={     <Tooltip title='Delete Question'>
+<IconButton onClick={e => deleteQuestion(e, x.id)}>
+  <CancelOutlinedIcon />
+</IconButton>
+</Tooltip>}
 />
 <FormControl>
   <Select
@@ -160,7 +207,13 @@ title={<TextField defaultValue={x.quest}  id="standard-search" onChange={(e)=>ch
 
 x.answer.map(y =>{
     if(y) {
-    return < TextField key={y.double_v} defaultValue={y.option}  id="standard-search" onChange={(e)=>changeAnswer(e, x.id, y.double_v)}  type="search" helperText="Option" />  
+    return <Typography>< TextField key={y.double_v} defaultValue={y.option}  id="standard-search" onChange={(e)=>changeAnswer(e, x.id, y.double_v)}  type="search" helperText="Option" /> 
+    <Tooltip title='Delete Answer'>
+<IconButton onClick={e => deleteAnswer(e, x.id, y.double_v)}>
+  <CancelOutlinedIcon />
+</IconButton>
+</Tooltip>
+    </Typography>
     }
     else{
         return ''
@@ -216,7 +269,6 @@ x.answer.map(y =>{
     <Card className={classes.root}>
       <CardHeader
         title=   {<TextField defaultValue="Form #" id="standard-search"  type="search"         helperText="Title" />}
-
       />
 
       <CardMedia
