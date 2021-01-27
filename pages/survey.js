@@ -176,9 +176,11 @@ found[0].answer = found2
 
 if(found.length > 0){
     found[0].type = e.target.value;
+    found[0].answer = []
     all_q.splice(index, 1, found[0])
     console.log('TYpe', all_q)
     setQuestions(all_q)
+
 
 }
     
@@ -239,6 +241,25 @@ action={     <Tooltip title='Delete Question'>
                 }
             })
          )
+
+         case 'several':
+            return (
+               x.answer.map(y =>{
+                   console.log('array of answers',y)
+                   if(y) {
+                   return <Typography>< TextField key={y.double_v} defaultValue={y.option}  id="standard-search" onChange={(e)=>changeAnswer(e, x.id, y.double_v)}  type="search" helperText="Option" /> 
+                   <Tooltip title='Delete Answer'>
+               <IconButton onClick={e => deleteAnswer(e, x.id, y.double_v)}>
+                 <CancelOutlinedIcon />
+               </IconButton>
+               </Tooltip>
+                   </Typography>
+                   }
+                   else{
+                       return ''
+                   }
+               })
+            )
 
      case 'Manager':
          return (
