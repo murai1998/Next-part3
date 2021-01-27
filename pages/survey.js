@@ -164,10 +164,24 @@ found[0].answer = found2
 
 
   const handleType=(e, id) =>{
-    console.log('E', e.target.value)
-    if(e.target.value === 'one'){
-        
+    let all_q = [...questions]
+    let index = 0;
+    let found = []
+    found = all_q.filter((x, i) =>{
+    if(x.id === id){
+        index = i;
+        return x;
     }
+    })
+
+if(found.length > 0){
+    found[0].type = e.target.value;
+    all_q.splice(index, 1, found[0])
+    console.log('TYpe', all_q)
+    setQuestions(all_q)
+
+}
+    
   }
 
 
@@ -203,34 +217,57 @@ action={     <Tooltip title='Delete Question'>
   </Select>
   {/* <FormHelperText>Select Type of Response</FormHelperText> */}
 </FormControl>
-{
+{console.log("Type", x.type)}
+{(() => {
+  
+  switch (x.type) {
+     case 'one':
+         return (
+            x.answer.map(y =>{
+                console.log('array of answers',y)
+                if(y) {
+                return <Typography>< TextField key={y.double_v} defaultValue={y.option}  id="standard-search" onChange={(e)=>changeAnswer(e, x.id, y.double_v)}  type="search" helperText="Option" /> 
+                <Tooltip title='Delete Answer'>
+            <IconButton onClick={e => deleteAnswer(e, x.id, y.double_v)}>
+              <CancelOutlinedIcon />
+            </IconButton>
+            </Tooltip>
+                </Typography>
+                }
+                else{
+                    return ''
+                }
+            })
+         )
 
-x.answer.map(y =>{
-    if(y) {
-    return <Typography>< TextField key={y.double_v} defaultValue={y.option}  id="standard-search" onChange={(e)=>changeAnswer(e, x.id, y.double_v)}  type="search" helperText="Option" /> 
-    <Tooltip title='Delete Answer'>
-<IconButton onClick={e => deleteAnswer(e, x.id, y.double_v)}>
-  <CancelOutlinedIcon />
-</IconButton>
-</Tooltip>
-    </Typography>
-    }
-    else{
-        return ''
-    }
-})
-    
-}
-<Button onClick={(e)=>addAnswer(e, x.id)}>Add another option</Button>
+     case 'Manager':
+         return (
+           <div>You are a Manager.</div>
+         )
+     default:
+         return (
+           <div>You are a User.</div>
+         )
+  }
+
+})()}
+
+
+<Button onClick={(e)=>addAnswer(e, x.id)}>Add another option</Button> 
+
+
+
 </Card>
 
 })
   }
 
   const addAnswer =(e, id)=>{
+      console.log("id ", id)
     let all_q = [...questions];
     let index = 0;
     let found = []
+
     found = all_q.filter((x, i) =>{
     if(x.id === id){
         index = i;
@@ -238,6 +275,7 @@ x.answer.map(y =>{
     }
     })
     if(found.length > 0){
+        console.log("Fooo", found[0])
         found[0].answer.push({
             double_v: double_id,
             option: ''
