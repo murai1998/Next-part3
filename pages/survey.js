@@ -27,6 +27,7 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import Button from '@material-ui/core/Button';
 import CancelOutlinedIcon from '@material-ui/icons/CancelOutlined';
+import Input from '@material-ui/core/Input'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -261,20 +262,31 @@ action={     <Tooltip title='Delete Question'>
                })
             )
 
-     case 'Manager':
+     case 'short':
          return (
-           <div>You are a Manager.</div>
+            <FormControl>
+            <InputLabel htmlFor="standard-adornment-amount">Response</InputLabel>
+            <Input/>
+          </FormControl>
+         )
+         case 'long':
+         return (
+            <FormControl fullWidth >
+            <InputLabel htmlFor="standard-adornment-amount">Response</InputLabel>
+            <Input/>
+          </FormControl>
          )
      default:
          return (
-           <div>You are a User.</div>
+           <div></div>
          )
   }
 
 })()}
 
+{x.type === 'one' || x.type === 'several' ? <Button onClick={(e)=>addAnswer(e, x.id)}>Add an option</Button>  : ('')}
 
-<Button onClick={(e)=>addAnswer(e, x.id)}>Add another option</Button> 
+
 
 
 
