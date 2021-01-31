@@ -6,14 +6,9 @@ import CardHeader from "@material-ui/core/CardHeader";
 import CardMedia from "@material-ui/core/CardMedia";
 import CardContent from "@material-ui/core/CardContent";
 import CardActions from "@material-ui/core/CardActions";
-import Collapse from "@material-ui/core/Collapse";
-import Avatar from "@material-ui/core/Avatar";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import { red } from "@material-ui/core/colors";
-import FavoriteIcon from "@material-ui/icons/Favorite";
-import ShareIcon from "@material-ui/icons/Share";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import TextField from "@material-ui/core/TextField";
 import AddCircleOutlineOutlinedIcon from "@material-ui/icons/AddCircleOutlineOutlined";
 import Layout from "../components/layout";
@@ -22,7 +17,6 @@ import DeleteOutlineOutlinedIcon from "@material-ui/icons/DeleteOutlineOutlined"
 import SpeakerNotesOutlinedIcon from "@material-ui/icons/SpeakerNotesOutlined";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
-import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import Button from "@material-ui/core/Button";
@@ -31,8 +25,6 @@ import Input from "@material-ui/core/Input";
 import SaveAltIcon from '@material-ui/icons/SaveAlt';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
 const useStyles = makeStyles((theme) => ({
@@ -78,6 +70,18 @@ export default function RecipeReviewCard() {
     setOpen(false);
   };
   
+  //========================SUBMIT==================
+
+  const handleProceed =()=>{
+let survey = {
+    title: title,
+questions: questions,
+comment: comment,
+}
+console.log('SURVEY', survey)
+
+    setOpen(false);
+  }
   
   //===========CHANGE QUESTION=============
   const changeQuestion = (e, id) => {
@@ -478,7 +482,7 @@ setShowComment(!state_now)
           <Button onClick={handleClose} color="primary">
            Cancel
           </Button>
-          <Button onClick={handleClose} color="primary" autoFocus>
+          <Button onClick={handleProceed} color="primary" autoFocus>
             Proceed
           </Button>
         </DialogActions>
