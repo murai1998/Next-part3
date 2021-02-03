@@ -50,6 +50,148 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+
+const Question = ({ questions, changeQuestion, deleteQuestion, handleType, changeAnswer, deleteAnswer, addAnswer, classes }) => {
+  return questions.map((x, i) => {
+    return (
+      <Card key={i} variant="outlined">
+        <CardHeader
+          title={
+            <TextField
+              fullWidth
+              defaultValue={x.quest}
+              id="standard-search"
+              onChange={(e) => changeQuestion(e, x.id)}
+              type="search"
+              helperText="Question"
+            />
+          }
+          action={
+            <Tooltip title="Delete Question">
+              <IconButton onClick={(e) => deleteQuestion(e, x.id)}>
+                <CancelOutlinedIcon />
+              </IconButton>
+            </Tooltip>
+          }
+        />
+        <FormControl>
+          <Select
+            value={x.type}
+            onChange={(e) => handleType(e, x.id)}
+            displayEmpty
+            className={classes.selectEmpty}
+            inputProps={{ "aria-label": "Without label" }}
+          >
+            <MenuItem value="" disabled>
+              Select type of the response
+            </MenuItem>
+            <MenuItem value="one">
+              Multiple choices with 1 right answer
+            </MenuItem>
+            <MenuItem value="several">
+              Multiple choices with several anwers
+            </MenuItem>
+            <MenuItem value="short">Short Answer</MenuItem>
+            <MenuItem value="long">Long answer</MenuItem>
+          </Select>
+          {/* <FormHelperText>Select Type of Response</FormHelperText> */}
+        </FormControl>
+        {console.log("Type", x.type)}
+        {(() => {
+          switch (x.type) {
+            case "one":
+              return x.answer.map((y) => {
+                console.log("array of answers", y);
+                if (y) {
+                  return (
+                    <Typography>
+                      <TextField
+                        key={y.double_v}
+                        defaultValue={y.option}
+                        id="standard-search"
+                        onChange={(e) => changeAnswer(e, x.id, y.double_v)}
+                        type="search"
+                        helperText="Option"
+                      />
+                      <Tooltip title="Delete Answer">
+                        <IconButton
+                          onClick={(e) => deleteAnswer(e, x.id, y.double_v)}
+                        >
+                          <CancelOutlinedIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </Typography>
+                  );
+                } else {
+                  return "";
+                }
+              });
+
+            case "several":
+              return x.answer.map((y) => {
+                console.log("array of answers", y);
+                if (y) {
+                  return (
+                    <Typography>
+                      <TextField
+                        key={y.double_v}
+                        defaultValue={y.option}
+                        id="standard-search"
+                        onChange={(e) => changeAnswer(e, x.id, y.double_v)}
+                        type="search"
+                        helperText="Option"
+                      />
+                      <Tooltip title="Delete Answer">
+                        <IconButton
+                          onClick={(e) => deleteAnswer(e, x.id, y.double_v)}
+                        >
+                          <CancelOutlinedIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </Typography>
+                  );
+                } else {
+                  return "";
+                }
+              });
+
+            case "short":
+              return (
+                <FormControl>
+                  <InputLabel htmlFor="standard-adornment-amount">
+                    Response
+                  </InputLabel>
+                  <Input />
+                </FormControl>
+              );
+            case "long":
+              return (
+                <FormControl fullWidth>
+                  <InputLabel htmlFor="standard-adornment-amount">
+                    Response
+                  </InputLabel>
+                  <Input />
+                </FormControl>
+              );
+            default:
+              return <div></div>;
+          }
+        })()}
+
+        {x.type === "one" || x.type === "several" ? (
+          <Button onClick={(e) => addAnswer(e, x.id)}>Add an option</Button>
+        ) : (
+          ""
+        )}
+      </Card>
+    );
+  });
+};
+
+
+
+
+
 export default function RecipeReviewCard() {
   const classes = useStyles();
   const [questions, setQuestions] = useState([]);
@@ -268,143 +410,7 @@ setShowComment(!state_now)
   }
 
   //=======================QUESTION CARD===============
-  const Question = () => {
-    return questions.map((x, i) => {
-      return (
-        <Card key={i} variant="outlined">
-          <CardHeader
-            title={
-              <TextField
-                fullWidth
-                defaultValue={x.quest}
-                id="standard-search"
-                onChange={(e) => changeQuestion(e, x.id)}
-                type="search"
-                helperText="Question"
-              />
-            }
-            action={
-              <Tooltip title="Delete Question">
-                <IconButton onClick={(e) => deleteQuestion(e, x.id)}>
-                  <CancelOutlinedIcon />
-                </IconButton>
-              </Tooltip>
-            }
-          />
-          <FormControl>
-            <Select
-              value={x.type}
-              onChange={(e) => handleType(e, x.id)}
-              displayEmpty
-              className={classes.selectEmpty}
-              inputProps={{ "aria-label": "Without label" }}
-            >
-              <MenuItem value="" disabled>
-                Select type of the response
-              </MenuItem>
-              <MenuItem value="one">
-                Multiple choices with 1 right answer
-              </MenuItem>
-              <MenuItem value="several">
-                Multiple choices with several anwers
-              </MenuItem>
-              <MenuItem value="short">Short Answer</MenuItem>
-              <MenuItem value="long">Long answer</MenuItem>
-            </Select>
-            {/* <FormHelperText>Select Type of Response</FormHelperText> */}
-          </FormControl>
-          {console.log("Type", x.type)}
-          {(() => {
-            switch (x.type) {
-              case "one":
-                return x.answer.map((y) => {
-                  console.log("array of answers", y);
-                  if (y) {
-                    return (
-                      <Typography>
-                        <TextField
-                          key={y.double_v}
-                          defaultValue={y.option}
-                          id="standard-search"
-                          onChange={(e) => changeAnswer(e, x.id, y.double_v)}
-                          type="search"
-                          helperText="Option"
-                        />
-                        <Tooltip title="Delete Answer">
-                          <IconButton
-                            onClick={(e) => deleteAnswer(e, x.id, y.double_v)}
-                          >
-                            <CancelOutlinedIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </Typography>
-                    );
-                  } else {
-                    return "";
-                  }
-                });
-
-              case "several":
-                return x.answer.map((y) => {
-                  console.log("array of answers", y);
-                  if (y) {
-                    return (
-                      <Typography>
-                        <TextField
-                          key={y.double_v}
-                          defaultValue={y.option}
-                          id="standard-search"
-                          onChange={(e) => changeAnswer(e, x.id, y.double_v)}
-                          type="search"
-                          helperText="Option"
-                        />
-                        <Tooltip title="Delete Answer">
-                          <IconButton
-                            onClick={(e) => deleteAnswer(e, x.id, y.double_v)}
-                          >
-                            <CancelOutlinedIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </Typography>
-                    );
-                  } else {
-                    return "";
-                  }
-                });
-
-              case "short":
-                return (
-                  <FormControl>
-                    <InputLabel htmlFor="standard-adornment-amount">
-                      Response
-                    </InputLabel>
-                    <Input />
-                  </FormControl>
-                );
-              case "long":
-                return (
-                  <FormControl fullWidth>
-                    <InputLabel htmlFor="standard-adornment-amount">
-                      Response
-                    </InputLabel>
-                    <Input />
-                  </FormControl>
-                );
-              default:
-                return <div></div>;
-            }
-          })()}
-
-          {x.type === "one" || x.type === "several" ? (
-            <Button onClick={(e) => addAnswer(e, x.id)}>Add an option</Button>
-          ) : (
-            ""
-          )}
-        </Card>
-      );
-    });
-  };
-
+  
 
 
   
@@ -469,7 +475,7 @@ setShowComment(!state_now)
         />
        
  
-        <Question />
+        <Question questions={questions} changeQuestion={changeQuestion} deleteQuestion={deleteQuestion} handleType={handleType} changeAnswer={changeAnswer} deleteAnswer={deleteAnswer} addAnswer={ addAnswer} classes={classes}/>
         <Dialog
         open={open}
         onClose={handleClose}
