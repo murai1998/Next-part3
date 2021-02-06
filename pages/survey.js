@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import clsx from "clsx";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
 import CardMedia from "@material-ui/core/CardMedia";
@@ -26,6 +25,8 @@ import SaveAltIcon from '@material-ui/icons/SaveAlt';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import axios from 'axios'
+import { useSession, getSession } from 'next-auth/client'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -161,7 +162,7 @@ const Question = ({ questions, changeQuestion, deleteQuestion, handleType, chang
                   <InputLabel htmlFor="standard-adornment-amount">
                     Response
                   </InputLabel>
-                  <Input />
+                  <Input disabled value='Ex: YES or No' />
                 </FormControl>
               );
             case "long":
@@ -170,7 +171,7 @@ const Question = ({ questions, changeQuestion, deleteQuestion, handleType, chang
                   <InputLabel htmlFor="standard-adornment-amount">
                     Response
                   </InputLabel>
-                  <Input />
+                  <Input  fullWidth disabled value='Lorem Ipsum Lorem Ipsum ' />
                 </FormControl>
               );
             default:
@@ -192,7 +193,7 @@ const Question = ({ questions, changeQuestion, deleteQuestion, handleType, chang
 
 
 
-export default function RecipeReviewCard() {
+export default function RecipeReviewCard(props) {
   const classes = useStyles();
   const [questions, setQuestions] = useState([]);
   const [id, setId] = useState(0);
@@ -201,6 +202,10 @@ export default function RecipeReviewCard() {
   const [title, setTitle] = useState("");
   const [showComment, setShowComment] = useState(false)
   const [open, setOpen] = useState(false);
+  const [ session, loading ] = useSession()
+
+
+
 
 
 //================SAVE FORM FUNCTIONS===============
@@ -214,14 +219,17 @@ export default function RecipeReviewCard() {
   
   //========================SUBMIT==================
 
-  const handleProceed =()=>{
+  const handleProceed = async()=>{
 let survey = {
     title: title,
 questions: questions,
 comment: comment,
 }
 console.log('SURVEY', survey)
-
+let data = await axios.post(`http://localhost:3000/api/creator/${session.user.email}`, {
+  survey
+}).catch(err=>console.log(err))
+console.log("DATTA", data)
     setOpen(false);
   }
   

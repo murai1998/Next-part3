@@ -32,7 +32,7 @@ export default function Header () {
           </>}
           {session && <>
             {session.user.image && <span style={{backgroundImage: `url(${session.user.image})` }} className={styles.avatar}/>}
-            <span className={styles.signedInText}>
+            <span >
               <small>Signed in as</small><br/>
               <strong>{session.user.email || session.user.name}</strong>
               </span>
@@ -46,18 +46,23 @@ export default function Header () {
               >
                 Sign out
               </a>
-          </>}
-        </p>
-      </div>
-      <nav>
+              <div><nav>
         <ul className={styles.navItems}>
           <li className={styles.navItem}><Link href="/"><a>Home</a></Link></li>
           <li className={styles.navItem}><Link href="/client"><a>Client</a></Link></li>
           <li className={styles.navItem}><Link href="/server"><a>Server</a></Link></li>
           <li className={styles.navItem}><Link href="/protected"><a>Protected</a></Link></li>
           <li className={styles.navItem}><Link href="/api-example"><a>API</a></Link></li>
+          <li className={styles.navItem}><Link href={`/library/${session.user.email}`}><a>Library</a></Link></li>
         </ul>
-      </nav>
+      </nav></div>
+          </>}
+          
+        </p>
+
+        
+      </div>
+     
     </header>
   )
 }
