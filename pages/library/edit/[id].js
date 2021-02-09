@@ -10,7 +10,7 @@ import Typography from "@material-ui/core/Typography";
 import { red } from "@material-ui/core/colors";
 import TextField from "@material-ui/core/TextField";
 import AddCircleOutlineOutlinedIcon from "@material-ui/icons/AddCircleOutlineOutlined";
-import Layout from "../components/layout";
+import Layout from "../../../components/layout.js";
 import Tooltip from "@material-ui/core/Tooltip";
 import DeleteOutlineOutlinedIcon from "@material-ui/icons/DeleteOutlineOutlined";
 import SpeakerNotesOutlinedIcon from "@material-ui/icons/SpeakerNotesOutlined";
@@ -27,8 +27,9 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import axios from 'axios'
 import { useSession, getSession } from 'next-auth/client'
+import AccessDenied from '../../../components/access-denied'
+import {useRouter} from 'next/router'
 import SaveIcon from '@material-ui/icons/Save';
-
 const useStyles = makeStyles((theme) => ({
   root: {
     maxWidth: 345,
@@ -98,12 +99,12 @@ const Question = ({ questions, changeQuestion, deleteQuestion, handleType, chang
           </Select>
           {/* <FormHelperText>Select Type of Response</FormHelperText> */}
         </FormControl>
-        {console.log("Type", x.type)}
+
         {(() => {
           switch (x.type) {
             case "one":
               return x.answer.map((y) => {
-                console.log("array of answers", y);
+              
                 if (y) {
                   return (
                     <Typography>
@@ -131,7 +132,7 @@ const Question = ({ questions, changeQuestion, deleteQuestion, handleType, chang
 
             case "several":
               return x.answer.map((y) => {
-                console.log("array of answers", y);
+ 
                 if (y) {
                   return (
                     <Typography>
@@ -194,19 +195,27 @@ const Question = ({ questions, changeQuestion, deleteQuestion, handleType, chang
 
 
 
-export default function RecipeReviewCard(props) {
+export default function Edit({memory}) {
   const classes = useStyles();
-  const [questions, setQuestions] = useState([]);
-  const [id, setId] = useState(0);
-  const [double_id, setDouble] = useState(1);
+  const [questions, setQuestions] = useState(memory.data.questions);
+  const [id, setId] = useState(memory.data.questions.length);
+  const [double_id, setDouble] = useState(memory.data.questions.length + 1);
   const [comment, setComment] = useState("");
-  const [title, setTitle] = useState("");
+  const [title, setTitle] = useState(memory.data.title);
   const [showComment, setShowComment] = useState(false)
   const [open, setOpen] = useState(false);
   const [ session, loading ] = useSession()
-
-
-
+  const [ content , setContent ] = useState()
+  const router = useRouter()
+const [old_data, setOldData]  = useState(memory.data)
+  useEffect(()=>{
+    const fetchData = async () => {
+      const res = await fetch('/api/examples/protected')
+      const json = await res.json()
+      if (json.content) { setContent(json.content) }
+    }
+    fetchData()
+  },[session])
 
 
 //================SAVE FORM FUNCTIONS===============
@@ -221,17 +230,38 @@ export default function RecipeReviewCard(props) {
   //========================SUBMIT==================
 
   const handleProceed = async()=>{
-let survey = 
-{ title: title,
+let survey = {
+    title: title,
 questions: questions,
 comment: comment,
 }
-console.log('SURVEY', survey)
-let data = await axios.post(`http://localhost:3000/api/creator/${session.user.email}`, {
+let r_id = router.query.id
+console.log("Survey", survey)
+let data = await axios.put(`http://localhost:3000/api/changer/${r_id}`, {
   survey
 }).catch(err=>console.log(err))
-console.log("DATTA", data)
+console.log("Post", data)
     setOpen(false);
+  }
+
+
+
+
+  const handleClick = async()=>{
+    let survey = {
+        title: title,
+    questions: questions,
+    comment: comment,
+    }
+    let r_id = router.query.id
+    console.log("Survey", survey)
+    let data = await axios.put(`http://localhost:3000/api/changer/${r_id}`, {
+      survey
+    }).catch(err=>console.log(err))
+    console.log("KKK", memory.data._id)
+    router.push(`/library/export/${memory.data._id}`);
+        setOpen(false);
+
   }
   
   //===========CHANGE QUESTION=============
@@ -248,7 +278,6 @@ console.log("DATTA", data)
 
     if (found.length > 0) {
       found[0].quest = e.target.value;
-      console.log(found[0]);
       all_q.splice(index, 1, found[0]);
       setTimeout(() => setQuestions(all_q), 5000);
     }
@@ -275,15 +304,15 @@ console.log("DATTA", data)
         return x;
       }
     });
-    console.log("ANFF", found);
+ 
     if (found.length > 0) {
       let found2 = [];
       found2 = found[0].answer.filter((y) => y.double_v !== double_id);
 
-      console.log("jjjj", found2);
+  
       found[0].answer = found2;
       all_q.splice(index, 1, found[0]);
-      console.log("FFF", all_q);
+
       setQuestions(all_q);
     }
   };
@@ -291,7 +320,7 @@ console.log("DATTA", data)
   //==============CHANGE ANSWER==============
   const changeAnswer = (e, id, double_id) => {
     let all_q = [...questions];
-    console.log(all_q);
+
     let index = 0;
     let found = [];
     found = all_q.filter((x, i) => {
@@ -314,11 +343,11 @@ console.log("DATTA", data)
         }
       });
 
-      console.log("jjjj", found2);
+
       found[0].answer = found2;
 
       all_q.splice(index, 1, found[0]);
-      console.log("FFF", all_q);
+
       setTimeout(() => setQuestions(all_q), 5000);
     }
   };
@@ -340,7 +369,7 @@ console.log("DATTA", data)
       found[0].type = e.target.value;
       found[0].answer = [];
       all_q.splice(index, 1, found[0]);
-      console.log("TYpe", all_q);
+
       setQuestions(all_q);
     }
   };
@@ -348,7 +377,7 @@ console.log("DATTA", data)
 
   //============CHANGE COMMENT===============
   const addComment = (e) => {
-      console.log(',,', e.target.value)
+
     setComment(e.target.value);
   };
 
@@ -361,7 +390,7 @@ console.log("DATTA", data)
 
   //=============AND MULTIPLE ANSWERS==============
   const addAnswer = (e, id) => {
-    console.log("id ", id);
+
     let all_q = [...questions];
     let index = 0;
     let found = [];
@@ -373,7 +402,7 @@ console.log("DATTA", data)
       }
     });
     if (found.length > 0) {
-      console.log("Fooo", found[0]);
+
       found[0].answer.push({
         double_v: double_id,
         option: "",
@@ -424,7 +453,10 @@ setShowComment(!state_now)
 
   
 
+  if (typeof window !== 'undefined' && loading) return null
 
+  // If no session exists, display access denied message
+  if (!session) { return  <AccessDenied/>}
 
   return (
     <Layout>
@@ -451,16 +483,15 @@ setShowComment(!state_now)
             </IconButton>
           </Tooltip>
           <Tooltip title="Export">
-            <IconButton onClick={handleClickOpen}>
+            <IconButton onClick={handleClick}>
               <SaveAltIcon />
             </IconButton>
           </Tooltip>
-        
         </CardActions>
         <CardHeader
           title={
             <TextField
-              defaultValue="Form #"
+              defaultValue={old_data.title}
               id="standard-search"
               type="search"
               onChange={addTitle}
@@ -474,7 +505,7 @@ setShowComment(!state_now)
                     <InputLabel   htmlFor="standard-adornment-amount">
                       Comment
                     </InputLabel>
-                    <Input defaultValue={comment} onChange={addComment}/>
+                    <Input defaultValue={old_data.comment} onChange={addComment}/>
                    
               <Tooltip title="Delete Comment">
                 <IconButton onClick={deleteComment}>
@@ -512,3 +543,12 @@ setShowComment(!state_now)
     </Layout>
   );
 }
+
+
+
+Edit.getInitialProps = async({query: {id}})=>{
+  const res = await axios.get(`http://localhost:3000/api/changer/${id}`)
+  .catch(err=>console.log(err))
+      return {memory: res.data}
+    // return ''
+  }

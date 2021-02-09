@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
 import { useSession } from 'next-auth/client'
 import { makeStyles, withStyles } from '@material-ui/core/styles';
-import Layout from '../../components/layout'
-import AccessDenied from '../../components/access-denied'
+import Layout from '../../../components/layout'
+import AccessDenied from '../../../components/access-denied'
 import axios from 'axios'
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -15,7 +15,7 @@ import Link from 'next/link'
 
 const List2 =({list})=>{
 if(list){
-  console.log('This list', list)
+
   if(list.success === true){
     return list.data.map((x, i) => (
       <TableRow key={i}>
@@ -43,11 +43,10 @@ else{
 }
 
 
-
-
 export default function Library ({list}) {
   const [ session, loading ] = useSession()
   const [ content , setContent ] = useState()
+  const [listIt, setListIt] = useState(list.data)
 
   // Fetch content from protected route
   useEffect(()=>{
@@ -75,6 +74,7 @@ export default function Library ({list}) {
   if (!session) { return  <Layout><AccessDenied/></Layout> }
 
   // If session exists, display content
+  console.log('LLL', list)
   return (
     <Layout>
       <h1>Your Library</h1>
@@ -101,7 +101,7 @@ export default function Library ({list}) {
      
     
       </TableRow> : ('')}
-        <List2 list={list}/>
+        <List2 list={listIt}/>
         </TableBody>
       </Table>
     </TableContainer>
@@ -110,8 +110,10 @@ export default function Library ({list}) {
 }
 
 
-Library.getInitialProps = async({query: {account}})=>{
-const res = await axios.get(`http://localhost:3000/api/creator/${account}`)
-.catch(err=>console.log(err))
-    return {list: res.data}
-}
+Library.getInitialProps = async({query: {id}})=>{
+
+    const res = await axios.get(`http://localhost:3000/api/changer/${id}`)
+    .catch(err=>console.log(err))
+        return {list: res.data}
+      // return ''
+    }
