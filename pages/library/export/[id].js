@@ -12,34 +12,117 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Link from 'next/link'
+import Input from "@material-ui/core/Input";
+import Tooltip from "@material-ui/core/Tooltip";
+import Card from '@material-ui/core/Card';
+import InputLabel from "@material-ui/core/InputLabel";
+import FormControl from "@material-ui/core/FormControl";
+import CardHeader from '@material-ui/core/CardHeader';
+import CardMedia from '@material-ui/core/CardMedia';
+import CardContent from '@material-ui/core/CardContent';
+import CardActions from '@material-ui/core/CardActions';
+import TextField from '@material-ui/core/TextField';
+import Radio from '@material-ui/core/Radio';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
+import IconButton from '@material-ui/core/IconButton';
+import Typography from '@material-ui/core/Typography';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
+import RadioGroup from '@material-ui/core/RadioGroup';
 
-const List2 =({list})=>{
-if(list){
+const List2 =({handleChange, handleChange2, title, comment, questions, })=>{
+console.log(questions)
 
-  if(list.success === true){
-    return list.data.map((x, i) => (
-      <TableRow key={i}>
-        <TableCell  align="center" component="th" scope="row">
-          {i + 1}
-        </TableCell>
-        <TableCell  align="center" component="th" scope="row">
-        <Link href={`/library/edit/${x._id}`}><a>
-          {x.title}
-          </a></Link>
-        </TableCell>
+    return (
+
+<Card >
+      <CardHeader
+        title={title}
+        subheader={comment}
+      />
+       <form  noValidate autoComplete="off">
+      <TextField id="outlined-basic" label="Outlined" variant="outlined" name="email" label="Enter your email" />
+      <TextField id="outlined-basic" label="Outlined" variant="outlined"  name='full_name' label="Enter your full name" />
+      {questions.map(x =>{
+             return( <CardContent>
+      <InputLabel >
+      {x.quest}
+                  </InputLabel>
+      {(() => {
+          switch (x.type) {
+            case "one":
+          // <RadioGroup aria-label="gender" name="gender1"  onChange={handleChange2}>  
+              return x.answer.map((y) => {
+                console.log("array of answers", y);
+                if (y) {
+                  return (
+                    <Typography>
+                     <FormControlLabel name={x.quest} value={y.option} control={<Radio />} label={y.option} />
         
+                              </Typography>
+                  );
+                } else {
+                  return "";
+                }
+               
+              })
+             
+              
+          // </RadioGroup> 
+            case "several":
+              return x.answer.map((y) => {
+              if (y) {
+                return (
+                  <Typography>
+                              <FormControlLabel
+            control={<Checkbox checked={y.option} name={x.quest} onChange={handleChange}  />}
+            label={y.option}
+          />
+                            </Typography>
+                );
+              } else {
+                return "";
+              }
+              });
+
+            case "short":
+              return (
+                <FormControl>
+                  <TextField id="standard-basic" placeholder="Your answer" />
+                </FormControl>
+              );
+            case "long":
+              return (
+                <FormControl>
+                  <TextField fullWidth id="standard-basic" placeholder="Your answer" />
+                </FormControl>
+              );
+            default:
+              return <div></div>;
+          }
+        })()}
+     
+             </CardContent>)
+
+       })}
+    </form>
+      <CardMedia
+        
+        // image="/static/images/cards/paella.jpg"
     
-      </TableRow>
+      />
+    
+      <CardActions disableSpacing>
+       
+      </CardActions>
+
+   
       
-    ))
-  }
-  else{
-    return 'false'
-  }
-}
-else{
-  return 'false2'
-}
+    </Card>
+      
+    )
+   
+
 }
 
 
@@ -58,6 +141,11 @@ export default function Library ({list}) {
     fetchData()
   },[session])
 
+
+  const handleChange = (event) => {
+    setState({ ...state, [event.target.name]: event.target.checked });
+  };
+
   const StyledTableCell = withStyles((theme) => ({
     head: {
       backgroundColor: 'rgb(241 240 240);',
@@ -74,37 +162,16 @@ export default function Library ({list}) {
   if (!session) { return  <Layout><AccessDenied/></Layout> }
 
   // If session exists, display content
-  console.log('LLL', list)
+
   return (
     <Layout>
       <h1>Your Library</h1>
-      <TableContainer component={Paper}>
-      <Table  size="small" aria-label="a dense table">
-        <TableHead >
-          <TableRow >
-          <StyledTableCell align="center">#</StyledTableCell>
-            <StyledTableCell align="center">Title</StyledTableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          { list.data.length <=4 ?
-        <TableRow key='0'>
-        <TableCell  align="center" component="th" scope="row">
-          0
-        </TableCell>
-       
-        <TableCell  align="center" component="th" scope="row">
-        <Link href={`/survey`}><a>
-          Create a new survey
-          </a></Link>
-        </TableCell>
+     
      
     
-      </TableRow> : ('')}
-        <List2 list={listIt}/>
-        </TableBody>
-      </Table>
-    </TableContainer>
+      
+        <List2 handleChange={handleChange} title={listIt.title} comment={listIt.comment} questions={listIt.questions}/>
+     
     </Layout>
   )
 }
