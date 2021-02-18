@@ -30,7 +30,7 @@ import Typography from '@material-ui/core/Typography';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import RadioGroup from '@material-ui/core/RadioGroup';
 
-const List2 =({handleChange, handleChange2, title, comment, questions, })=>{
+const List2 =({handleChange, handleChange2, handleName, handleEmail, title, comment, questions, email, name})=>{
 console.log(questions)
 
     return (
@@ -41,23 +41,24 @@ console.log(questions)
         subheader={comment}
       />
        <form  noValidate autoComplete="off">
-      <TextField id="outlined-basic" label="Outlined" variant="outlined" name="email" label="Enter your email" />
-      <TextField id="outlined-basic" label="Outlined" variant="outlined"  name='full_name' label="Enter your full name" />
-      {questions.map(x =>{
+      <TextField error={email === ""}
+  helperText={email === "" ? 'Empty!' : ' '} id="outlined-basic"  onChange={handleEmail} label="Outlined" variant="outlined" name="email" label="Enter your email" type='email'/>
+      <TextField id="outlined-basic" defaultValue={name} onChange={handleName} label="Outlined" variant="outlined"  name='name' label="Enter your full name" />
+      {questions.map((x, index) =>{
              return( <CardContent>
       <InputLabel >
       {x.quest}
                   </InputLabel>
-      {(() => {
-          switch (x.type) {
-            case "one":
-          // <RadioGroup aria-label="gender" name="gender1"  onChange={handleChange2}>  
-              return x.answer.map((y) => {
+
+                  {x.type === 'one' ? 
+                  
+                 <RadioGroup aria-label="gender" name="gender1"  onChange={(e) =>handleChange(e, index, x.quest, x.type)}>  
+                 {x.answer.map((y, in2) => {
                 console.log("array of answers", y);
                 if (y) {
                   return (
                     <Typography>
-                     <FormControlLabel name={x.quest} value={y.option} control={<Radio />} label={y.option} />
+                     <FormControlLabel name={in2} value={y.option} control={<Radio />} label={y.option} />
         
                               </Typography>
                   );
@@ -65,42 +66,39 @@ console.log(questions)
                   return "";
                 }
                
-              })
+              })}
              
               
-          // </RadioGroup> 
-            case "several":
-              return x.answer.map((y) => {
-              if (y) {
-                return (
-                  <Typography>
-                              <FormControlLabel
-            control={<Checkbox checked={y.option} name={x.quest} onChange={handleChange}  />}
-            label={y.option}
-          />
-                            </Typography>
-                );
-              } else {
-                return "";
-              }
-              });
+          </RadioGroup> :('')}
+          {x.type === 'several' ? 
+      
+           x.answer.map((y, in2) => {
+            if (y) {
+              return (
+                <Typography>
+                            <FormControlLabel
+          control={<Checkbox defaultValue={false} name={in2} onChange={(e) =>handleChange2(e, index, x.quest, x.type)}  />}
+          label={y.option}
+        />
+                          </Typography>
+              );
+            } else {
+              return "";
+            }
+            }) : ('')
+        
+        }
 
-            case "short":
-              return (
-                <FormControl>
-                  <TextField id="standard-basic" placeholder="Your answer" />
-                </FormControl>
-              );
-            case "long":
-              return (
-                <FormControl>
-                  <TextField fullWidth id="standard-basic" placeholder="Your answer" />
-                </FormControl>
-              );
-            default:
-              return <div></div>;
-          }
-        })()}
+{x.type === 'short' ? 
+       <FormControl>
+       <TextField onChange={(e) =>handleChange(e, index, x.quest, x.type)} id="standard-basic" placeholder="Your answer" />
+     </FormControl>
+     :('')}
+      {x.type === 'long' ? 
+       <FormControl>
+       <TextField fullWidth onChange={(e) =>handleChange(e, index, x.quest, x.type)} id="standard-basic" placeholder="Your answer" />
+     </FormControl>
+     :('')}          
      
              </CardContent>)
 
@@ -130,7 +128,9 @@ export default function Library ({list}) {
   const [ session, loading ] = useSession()
   const [ content , setContent ] = useState()
   const [listIt, setListIt] = useState(list.data)
-
+  const [newAnswers, setAnswers] = useState([])
+  const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
   // Fetch content from protected route
   useEffect(()=>{
     const fetchData = async () => {
@@ -142,9 +142,60 @@ export default function Library ({list}) {
   },[session])
 
 
-  const handleChange = (event) => {
-    setState({ ...state, [event.target.name]: event.target.checked });
+  const handleChange2 = (event, i, quest, type) => {
+    console.log('kjkjkjkjk', event.target.checked)
+    let old_data = [...newAnswers]
+    console.log('old data', old_data)
+    let inn = 0
+    if(old_data.filter(x => x.id === i).length > 0){
+     let found = old_data.filter(x => x.id === i)[0].answers
+     old_data.forEach((x, i) => {
+      inn = i;
+    })
+     if(event.target.name in found){
+      found[event.target.name] = false
+      // old_data.splice(inn, 1, {id: i, question:quest, type: type, answers: event.target.value})
+     }
+     else{
+      found[event.target.name] = true
+     }
+    }
+    else{ 
+      setAnswers([...old_data, {id: i, question:quest, type: type, answers: {
+        [event.target.name]: event.target.checked
+      }}])
+    }
+
   };
+  const handleName=(e)=>{
+    setName(e.target.value)
+  }
+  const handleEmail=(e)=>{
+    setEmail(e.target.value)
+  }
+  const handleChange = (event, i, quest, type) => {
+
+    let old_data = [...newAnswers]
+    console.log('old data', old_data)
+    let inn = 0
+    if(old_data.filter(x => x.id === i).length > 0){
+      old_data.forEach((x, i) => {
+        inn = i;
+      })
+     let found = old_data.filter(x => x.id === i)[0].answers
+     old_data.splice(inn, 1, {id: i, question:quest, type: type, answers: event.target.value})
+     setAnswers(old_data)
+    }
+    else{ 
+      old_data.push({id: i, question:quest, type: type, answers: event.target.value})
+      setAnswers(old_data)
+    }
+
+  };
+
+
+
+
 
   const StyledTableCell = withStyles((theme) => ({
     head: {
@@ -164,13 +215,9 @@ export default function Library ({list}) {
   // If session exists, display content
 
   return (
+ 
     <Layout>
-      <h1>Your Library</h1>
-     
-     
-    
-      
-        <List2 handleChange={handleChange} title={listIt.title} comment={listIt.comment} questions={listIt.questions}/>
+        <List2 handleChange={handleChange} handleChange2={handleChange2} handleName={handleName} handleEmail={handleEmail} title={listIt.title} comment={listIt.comment} questions={listIt.questions} email={email} name={name}/>
      
     </Layout>
   )
