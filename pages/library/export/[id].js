@@ -29,8 +29,9 @@ import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import RadioGroup from '@material-ui/core/RadioGroup';
-
-const List2 =({handleChange, handleChange2, handleName, handleEmail, title, comment, questions, email, name})=>{
+import Button from '@material-ui/core/Button';
+import { Alert, AlertTitle } from '@material-ui/lab';
+const List2 =({handleChange, handleChange2, handleName, handleEmail,  handleSubmit,  title, comment, questions, email, name, errors, newAnswers, showAlert})=>{
 console.log(questions)
 
     return (
@@ -41,9 +42,13 @@ console.log(questions)
         subheader={comment}
       />
        <form  noValidate autoComplete="off">
-      <TextField error={email === ""}
-  helperText={email === "" ? 'Empty!' : ' '} id="outlined-basic"  onChange={handleEmail} label="Outlined" variant="outlined" name="email" label="Enter your email" type='email'/>
-      <TextField id="outlined-basic" defaultValue={name} onChange={handleName} label="Outlined" variant="outlined"  name='name' label="Enter your full name" />
+      <TextField error={errors.email ? {content: "Please, enter a valid email address", pointing: "below"}:null} id="outlined-basic"  onChange={handleEmail} label="Outlined" variant="outlined" name="email" label="Enter your email" type='email'/>
+      <TextField error={errors.name ? {content: "Please, enter your name", pointing: "below"}:null} id="outlined-basic"  onChange={handleName} label="Outlined" variant="outlined"  name='name' label="Enter your full name" />
+      {showAlert  ?<Alert severity="error">
+        <AlertTitle>Error</AlertTitle>
+       <strong>Please, fill out all fields carefully!</strong>
+      </Alert> :('')}
+    
       {questions.map((x, index) =>{
              return( <CardContent>
       <InputLabel >
@@ -52,7 +57,7 @@ console.log(questions)
 
                   {x.type === 'one' ? 
                   
-                 <RadioGroup aria-label="gender" name="gender1"  onChange={(e) =>handleChange(e, index, x.quest, x.type)}>  
+                 <RadioGroup  aria-label="gender" name="gender1"  onChange={(e) =>handleChange(e, index, x.quest, x.type)}>  
                  {x.answer.map((y, in2) => {
                 console.log("array of answers", y);
                 if (y) {
@@ -75,7 +80,7 @@ console.log(questions)
            x.answer.map((y, in2) => {
             if (y) {
               return (
-                <Typography>
+                <Typography >
                             <FormControlLabel
           control={<Checkbox defaultValue={false} name={in2} onChange={(e) =>handleChange2(e, index, x.quest, x.type)}  />}
           label={y.option}
@@ -111,7 +116,7 @@ console.log(questions)
       />
     
       <CardActions disableSpacing>
-       
+      <Button onClick={handleSubmit}>Submit</Button>
       </CardActions>
 
    
@@ -131,6 +136,8 @@ export default function Library ({list}) {
   const [newAnswers, setAnswers] = useState([])
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
+  const [errors, setErrors] = useState({})
+  const [showAlert, setShowAlert] = useState(false)
   // Fetch content from protected route
   useEffect(()=>{
     const fetchData = async () => {
@@ -193,7 +200,38 @@ export default function Library ({list}) {
 
   };
 
+  const validate = () =>{
+    let err = {}
+    if(!email){
+      err.email = 'Email required'
+    }
+    if(!name){
+      err.name = 'Name required'
+    }
 
+    if(newAnswers.answers === undefined )
+   {
+      err.answers = 'Answers'
+      console.log('yes', err.answers)
+    }
+    return err
+  }
+
+
+const handleSubmit= (e)=>{
+
+e.preventDefault()
+let errs = validate()
+console.log("LLLL", listIt.questions.length)
+if(newAnswers.length !== listIt.questions.length){
+  setShowAlert(true)
+}
+else{
+  setShowAlert(false)
+}
+setErrors(errs)
+
+}
 
 
 
@@ -217,7 +255,7 @@ export default function Library ({list}) {
   return (
  
     <Layout>
-        <List2 handleChange={handleChange} handleChange2={handleChange2} handleName={handleName} handleEmail={handleEmail} title={listIt.title} comment={listIt.comment} questions={listIt.questions} email={email} name={name}/>
+        <List2 handleChange={handleChange} handleChange2={handleChange2} handleName={handleName} handleEmail={handleEmail} handleSubmit={handleSubmit} title={listIt.title} comment={listIt.comment} questions={listIt.questions} email={email} name={name} errors={errors} newAnswers={newAnswers} showAlert={showAlert}/>
      
     </Layout>
   )
