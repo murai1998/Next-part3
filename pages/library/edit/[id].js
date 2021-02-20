@@ -56,6 +56,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Question = ({ questions, changeQuestion, deleteQuestion, handleType, changeAnswer, deleteAnswer, addAnswer, classes }) => {
   return questions.map((x, i) => {
+    console.log('All', x)
     return (
       <Card key={i} variant="outlined">
         <CardHeader
@@ -198,7 +199,7 @@ const Question = ({ questions, changeQuestion, deleteQuestion, handleType, chang
 export default function Edit({memory}) {
   const classes = useStyles();
   const [questions, setQuestions] = useState(memory.data.questions);
-  const [id, setId] = useState(memory.data.questions.length);
+  const [id, setId] = useState(memory.data.questions.length + 1);
   const [double_id, setDouble] = useState(memory.data.questions.length + 1);
   const [comment, setComment] = useState("");
   const [title, setTitle] = useState(memory.data.title);
@@ -249,7 +250,7 @@ console.log("Post", data)
 
   const handleClick = async()=>{
     let survey = {
-        title: title,
+    title: title,
     questions: questions,
     comment: comment,
     }

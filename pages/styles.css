@@ -28,3 +28,7 @@ iframe {
   border-radius: .5rem;
   filter: invert(1);
 }
+
+.PrivateSwitchBase-input-18{
+  display: none;
+}

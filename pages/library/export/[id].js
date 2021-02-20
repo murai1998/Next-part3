@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useSession } from 'next-auth/client'
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import Layout from '../../../components/layout'
@@ -31,20 +31,19 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import Button from '@material-ui/core/Button';
 import { Alert, AlertTitle } from '@material-ui/lab';
-const List2 =({handleChange, handleChange2, handleName, handleEmail,  handleSubmit,  title, comment, questions, email, name, errors, newAnswers, showAlert})=>{
+import {useRouter} from 'next/router'
+
+const List2 =({handleChange, handleChange2, handleName, handleEmail,  handleSubmit,  title, comment, questions,  errors, newAnswers, showAlert})=>{
 console.log(questions)
 
     return (
-
 <Card >
       <CardHeader
         title={title}
         subheader={comment}
       />
        <form  noValidate autoComplete="off">
-      <TextField error={errors.email ? {content: "Please, enter a valid email address", pointing: "below"}:null} id="outlined-basic"  onChange={handleEmail} label="Outlined" variant="outlined" name="email" label="Enter your email" type='email'/>
-      <TextField error={errors.name ? {content: "Please, enter your name", pointing: "below"}:null} id="outlined-basic"  onChange={handleName} label="Outlined" variant="outlined"  name='name' label="Enter your full name" />
-      {showAlert  ?<Alert severity="error">
+     {showAlert  ?<Alert severity="error">
         <AlertTitle>Error</AlertTitle>
        <strong>Please, fill out all fields carefully!</strong>
       </Alert> :('')}
@@ -63,8 +62,7 @@ console.log(questions)
                 if (y) {
                   return (
                     <Typography>
-                     <FormControlLabel name={in2} value={y.option} control={<Radio />} label={y.option} />
-        
+                     <FormControlLabel name={y.option} value={y.option} control={<Radio />} label={y.option} />
                               </Typography>
                   );
                 } else {
@@ -82,7 +80,7 @@ console.log(questions)
               return (
                 <Typography >
                             <FormControlLabel
-          control={<Checkbox defaultValue={false} name={in2} onChange={(e) =>handleChange2(e, index, x.quest, x.type)}  />}
+          control={<Checkbox defaultValue={false} name={y.option} onChange={(e) =>handleChange2(e, index, x.quest, x.type)}  />}
           label={y.option}
         />
                           </Typography>
@@ -114,14 +112,10 @@ console.log(questions)
         // image="/static/images/cards/paella.jpg"
     
       />
-    
       <CardActions disableSpacing>
       <Button onClick={handleSubmit}>Submit</Button>
-      </CardActions>
-
-   
-      
-    </Card>
+      </CardActions> 
+    </Card> 
       
     )
    
@@ -134,9 +128,11 @@ export default function Library ({list}) {
   const [ content , setContent ] = useState()
   const [listIt, setListIt] = useState(list.data)
   const [newAnswers, setAnswers] = useState([])
-  const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
+  const [copy, setCopy] = useState(false)
   const [errors, setErrors] = useState({})
+  const router = useRouter()
+  const textAreaRef = useRef(null);
+  const [copySuccess, setCopySuccess] = useState('');
   const [showAlert, setShowAlert] = useState(false)
   // Fetch content from protected route
   useEffect(()=>{
@@ -144,6 +140,12 @@ export default function Library ({list}) {
       const res = await fetch('/api/examples/protected')
       const json = await res.json()
       if (json.content) { setContent(json.content) }
+      if(session){
+        if(session.user.email ===  list.data.user_id){
+          setCopy(true)
+        }
+       
+      }
     }
     fetchData()
   },[session])
@@ -157,11 +159,15 @@ export default function Library ({list}) {
     if(old_data.filter(x => x.id === i).length > 0){
      let found = old_data.filter(x => x.id === i)[0].answers
      old_data.forEach((x, i) => {
+       if(x.id === i) {
       inn = i;
+       }
     })
      if(event.target.name in found){
-      found[event.target.name] = false
-      // old_data.splice(inn, 1, {id: i, question:quest, type: type, answers: event.target.value})
+      delete found[event.target.name]
+
+
+ old_data.splice(inn, 1)
      }
      else{
       found[event.target.name] = true
@@ -180,8 +186,19 @@ export default function Library ({list}) {
   const handleEmail=(e)=>{
     setEmail(e.target.value)
   }
-  const handleChange = (event, i, quest, type) => {
 
+const copyToClipboard = (e, loc) => {
+  console.log('Copy', loc)
+    textAreaRef.current.select();
+    document.execCommand('copy');
+    e.target.focus();
+    setCopySuccess('Copied!')
+    setTimeout(() =>{
+      setCopySuccess('');
+    }, 1000)
+  
+  };
+  const handleChange = (event, i, quest, type) => {
     let old_data = [...newAnswers]
     console.log('old data', old_data)
     let inn = 0
@@ -197,17 +214,11 @@ export default function Library ({list}) {
       old_data.push({id: i, question:quest, type: type, answers: event.target.value})
       setAnswers(old_data)
     }
-
   };
 
   const validate = () =>{
     let err = {}
-    if(!email){
-      err.email = 'Email required'
-    }
-    if(!name){
-      err.name = 'Name required'
-    }
+
 
     if(newAnswers.answers === undefined )
    {
@@ -218,21 +229,41 @@ export default function Library ({list}) {
   }
 
 
-const handleSubmit= (e)=>{
-
+const handleSubmit= async(e)=>{
+  let r_id = router.query.id
+  console.log("IIIDD", r_id)
 e.preventDefault()
-let errs = validate()
-console.log("LLLL", listIt.questions.length)
-if(newAnswers.length !== listIt.questions.length){
+let index = 0;
+newAnswers.forEach(y =>{
+  if(y.answers){
+    if(Object.keys(y.answers).length > 0) {
+index++
+    }
+  }
+})
+console.log('Length', listIt.questions.length, index)
+if(index !== listIt.questions.length){
   setShowAlert(true)
+  return
 }
 else{
   setShowAlert(false)
+let ans = [...newAnswers]
+// ans.map(y =>{
+//   if(y.type === "several"){
+//     y.answers.
+//   }
+// })
+   let send_obj={
+     answers: newAnswers
+   }
+   let data = await axios.post(`http://localhost:3000/api/answers/${r_id}`, {
+    send_obj
+}).catch(err=>console.log(err))
+ console.log('object', data)
+ 
 }
-setErrors(errs)
-
 }
-
 
 
   const StyledTableCell = withStyles((theme) => ({
@@ -245,17 +276,28 @@ setErrors(errs)
     },
   }))(TableCell);
   // When rendering client side don't display anything until loading is complete
-  if (typeof window !== 'undefined' && loading) return null
+  //if (typeof window !== 'undefined' && loading) return null
 
   // If no session exists, display access denied message
-  if (!session) { return  <Layout><AccessDenied/></Layout> }
+  //if (!session) { return  <Layout><AccessDenied/></Layout> }
 
   // If session exists, display content
 
   return (
  
     <Layout>
-        <List2 handleChange={handleChange} handleChange2={handleChange2} handleName={handleName} handleEmail={handleEmail} handleSubmit={handleSubmit} title={listIt.title} comment={listIt.comment} questions={listIt.questions} email={email} name={name} errors={errors} newAnswers={newAnswers} showAlert={showAlert}/>
+    {console.log('LIST', newAnswers)}
+    {copy ? <div><Typography>Copy link of your form</Typography> <textarea style={{width: '100%'}}  ref={textAreaRef} value={window.location.href} />
+    {
+    
+       document.queryCommandSupported('copy') &&
+        <div>
+          <button onClick={(e)=>copyToClipboard(e, window.location.href)}>Copy</button> 
+          {copySuccess}
+        </div>
+      }
+    </div> :('')}
+        <List2 handleChange={handleChange} handleChange2={handleChange2} handleName={handleName} handleEmail={handleEmail} handleSubmit={handleSubmit} title={listIt.title} comment={listIt.comment} questions={listIt.questions}  errors={errors} newAnswers={newAnswers} showAlert={showAlert}/>
      
     </Layout>
   )
