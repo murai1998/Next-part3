@@ -30,26 +30,15 @@ import { useSession, getSession } from 'next-auth/client'
 import AccessDenied from '../../../components/access-denied'
 import {useRouter} from 'next/router'
 import SaveIcon from '@material-ui/icons/Save';
+import FormatListNumberedIcon from '@material-ui/icons/FormatListNumbered';
+
+
 const useStyles = makeStyles((theme) => ({
   root: {
-    maxWidth: 345,
-  },
-  media: {
-    height: 0,
-    paddingTop: "56.25%", // 16:9
-  },
-  expand: {
-    transform: "rotate(0deg)",
-    marginLeft: "auto",
-    transition: theme.transitions.create("transform", {
-      duration: theme.transitions.duration.shortest,
-    }),
-  },
-  expandOpen: {
-    transform: "rotate(180deg)",
-  },
-  avatar: {
-    backgroundColor: red[500],
+    padding: '4em',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center'
   },
 }));
 
@@ -58,16 +47,19 @@ const Question = ({ questions, changeQuestion, deleteQuestion, handleType, chang
   return questions.map((x, i) => {
     console.log('All', x)
     return (
-      <Card key={i} variant="outlined">
+      <Card style={{minWidth: '100%',   }} key={i} variant="outlined">
         <CardHeader
           title={
             <TextField
               fullWidth
+              style={{width: '300px', maxWidth: '100%', minWidth: '100%'}}
               defaultValue={x.quest}
               id="standard-search"
               onChange={(e) => changeQuestion(e, x.id)}
               type="search"
               helperText="Question"
+              size="large"
+              style={{color: '#3f51b5'}}
             />
           }
           action={
@@ -199,7 +191,7 @@ const Question = ({ questions, changeQuestion, deleteQuestion, handleType, chang
 export default function Edit({memory}) {
   const classes = useStyles();
   const [questions, setQuestions] = useState(memory.data.questions);
-  const [id, setId] = useState(memory.data.questions.length + 1);
+  const [id, setId] = useState(0);
   const [double_id, setDouble] = useState(memory.data.questions.length + 1);
   const [comment, setComment] = useState("");
   const [title, setTitle] = useState(memory.data.title);
@@ -214,13 +206,19 @@ const [old_data, setOldData]  = useState(memory.data)
       const res = await fetch('/api/examples/protected')
       const json = await res.json()
       if (json.content) { setContent(json.content) }
+      let new_index = 0
+      memory.data.questions.forEach(x =>{
+       if( new_index < x.id) new_index = x.id
+      })
+      console.log("New Index", new_index + 1)
+      setId(new_index + 1) 
     }
     fetchData()
   },[session])
 
 
 //================SAVE FORM FUNCTIONS===============
-  const handleClickOpen = () => {
+  const handleClickOpen = async() => {
     setOpen(true);
   };
 
@@ -238,14 +236,14 @@ comment: comment,
 }
 let r_id = router.query.id
 console.log("Survey", survey)
+let data3 = await axios.delete(`http://localhost:3000/api/answers/${r_id}`).catch(err=>console.log(err))
 let data = await axios.put(`http://localhost:3000/api/changer/${r_id}`, {
   survey
 }).catch(err=>console.log(err))
-console.log("Post", data)
+console.log("Post", data3)
+router.push(`/library/${session.user.email}`);
     setOpen(false);
   }
-
-
 
 
   const handleClick = async()=>{
@@ -265,6 +263,24 @@ console.log("Post", data)
 
   }
   
+  const handleClick01 = async()=>{
+    let survey = {
+    title: title,
+    questions: questions,
+    comment: comment,
+    }
+    let r_id = router.query.id
+    console.log("Survey", survey)
+    let data = await axios.put(`http://localhost:3000/api/changer/${r_id}`, {
+      survey
+    }).catch(err=>console.log(err))
+    console.log("KKK", memory.data._id)
+    router.push(`/library/answers/${session.user.email}`);
+        setOpen(false);
+
+  }
+
+
   //===========CHANGE QUESTION=============
   const changeQuestion = (e, id) => {
     let all_q = [...questions];
@@ -460,9 +476,28 @@ setShowComment(!state_now)
   if (!session) { return  <AccessDenied/>}
 
   return (
-    <Layout>
-      <Card className={classes.root}>
-      <CardActions disableSpacing>
+    <Layout >
+      <Card style={{display: 'flex', 
+    justifyContent: 'center',
+    alignItems: 'center', flexDirection: 'column', padding: '1em 2em'}}>
+      <div className='structure'>
+      <CardHeader
+      style={{minWidth: '45%', paddingTop: 0, paddingBottom: 0 }}
+          title={
+            <TextField
+            style={{minWidth: '100%'}}
+              defaultValue={old_data.title}
+              id="standard-search"
+              type="search"
+              onChange={addTitle}
+              helperText="Title"
+              size="large"
+              style={{color: '#3f51b5'}}
+              
+            />
+          }
+        />
+      <CardActions style={{width: 'fitContent'}} disableSpacing>
           <Tooltip title="Add Question">
             <IconButton onClick={addQuestion}>
               <AddCircleOutlineOutlinedIcon />
@@ -488,18 +523,15 @@ setShowComment(!state_now)
               <SaveAltIcon />
             </IconButton>
           </Tooltip>
+          <Tooltip title="Responces">
+            <IconButton onClick={handleClick01}>
+              <FormatListNumberedIcon  />
+            </IconButton>
+          </Tooltip>
+          
         </CardActions>
-        <CardHeader
-          title={
-            <TextField
-              defaultValue={old_data.title}
-              id="standard-search"
-              type="search"
-              onChange={addTitle}
-              helperText="Title"
-            />
-          }
-        />
+        
+        </div>
         
         <CardContent>
         {showComment ? <FormControl fullWidth>
@@ -516,20 +548,17 @@ setShowComment(!state_now)
             
                   </FormControl> : ('')}
         </CardContent>
-        <CardMedia
-          className={classes.media}
-          image="/static/images/cards/paella.jpg"
-        />
+      
        
  
-        <Question questions={questions} changeQuestion={changeQuestion} deleteQuestion={deleteQuestion} handleType={handleType} changeAnswer={changeAnswer} deleteAnswer={deleteAnswer} addAnswer={ addAnswer} classes={classes}/>
+        <Question  questions={questions} changeQuestion={changeQuestion} deleteQuestion={deleteQuestion} handleType={handleType} changeAnswer={changeAnswer} deleteAnswer={deleteAnswer} addAnswer={ addAnswer} classes={classes}/>
         <Dialog
         open={open}
         onClose={handleClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">{"Do you want to save and publish your survey?"}</DialogTitle>
+        <DialogTitle id="alert-dialog-title">{"Do you want to update this form? Make sure that all existing answers will be removed"}</DialogTitle>
        
         <DialogActions>
           <Button onClick={handleClose} color="primary">

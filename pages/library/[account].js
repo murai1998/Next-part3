@@ -13,17 +13,18 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Link from 'next/link'
 
+
 const List2 =({list})=>{
 if(list){
   console.log('This list', list)
   if(list.success === true){
     return list.data.map((x, i) => (
       <TableRow key={i}>
-        <TableCell  align="center" component="th" scope="row">
+        <TableCell style={{ fontSize: '1.1em'}}  align="center" component="th" scope="row">
           {i + 1}
         </TableCell>
-        <TableCell  align="center" component="th" scope="row">
-        <Link href={`/library/edit/${x._id}`}><a>
+        <TableCell style={{ fontSize: '1.1em'}} align="left" component="th" scope="row">
+        <Link   href={`/library/edit/${x._id}`}><a style={{ textDecoration: 'none !important' }}>
           {x.title}
           </a></Link>
         </TableCell>
@@ -66,6 +67,7 @@ export default function Library ({list}) {
     },
     body: {
       fontSize: 14,
+ 
     },
   }))(TableCell);
   // When rendering client side don't display anything until loading is complete
@@ -76,26 +78,29 @@ export default function Library ({list}) {
 
   // If session exists, display content
   return (
-    <Layout>
-      <h1>Your Library</h1>
+    <Layout >
+      <style>
+@import url('https://fonts.googleapis.com/css2?family=Reggae+One&display=swap');
+</style>
+      <h1 style={{fontFamily: 'Reggae One, cursive', marginTop: 0, color: '#f50057', padding: '0 0.5em'}}>Your Library</h1>
       <TableContainer component={Paper}>
       <Table  size="small" aria-label="a dense table">
         <TableHead >
           <TableRow >
-          <StyledTableCell align="center">#</StyledTableCell>
-            <StyledTableCell align="center">Title</StyledTableCell>
+          <StyledTableCell style={{color: 'rgb(63, 81, 181)', fontSize: '1.3em', fontWeight: 700, fontFamily: 'Reggae One, cursive'}} align="center">#</StyledTableCell>
+            <StyledTableCell style={{color: 'rgb(63, 81, 181)', fontSize: '1.3em', fontWeight: 700, fontFamily: 'Reggae One, cursive'}} align="left">Title</StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           { list.data.length <=4 ?
         <TableRow key='0'>
-        <TableCell  align="center" component="th" scope="row">
+        <TableCell style={{ fontSize: '1.1em'}}  align="center" component="th" scope="row">
           0
         </TableCell>
        
-        <TableCell  align="center" component="th" scope="row">
-        <Link href={`/survey`}><a>
-          Create a new survey
+        <TableCell style={{ fontSize: '1.1em'}}  align="left" component="th" scope="row">
+        <Link style={{  textDecoration: 'none'}} href={`/survey`}><a style={{ textDecoration: 'none' }}>
+          <i>Create a new survey</i>
           </a></Link>
         </TableCell>
      

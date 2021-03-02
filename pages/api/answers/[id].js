@@ -12,7 +12,8 @@ const {
 switch (method) {
     case 'GET':
         try {
-            const answers = await Answers.find();
+            const answers = await Answers.find({form_id: id});
+            console.log('AAAA', answers)
 if(!answers) res.status(400).json({ success: false });
             res.status(200).json({ success: true, data: answers })
         } catch (error) {
@@ -28,15 +29,17 @@ if(!answers) res.status(400).json({ success: false });
 //             res.status(400).json({ success: false, error: error });
 //         }
 //         break;
-//         case 'DELETE':
-//             try {
-//                 const review = await Review.deleteOne({_id: id});
-//     if(!review) res.status(400).json({ success: false });
-//                 res.status(200).json({ success: true, data: {} })
-//             } catch (error) {
-//                 res.status(400).json({ success: false });
-//             }
-//             break;
+        case 'DELETE':
+            try {
+                console.log('dddd', id)
+                const answers = await Answers.deleteMany({form_id: id});
+                console.log("DELTE", answers)
+    if(!answers) res.status(400).json({ success: false });
+                res.status(200).json({ success: true, data: answers})
+            } catch (error) {
+                res.status(400).json({ success: false });
+            }
+            break;
     case 'POST':
         try {
             const new_answers ={
