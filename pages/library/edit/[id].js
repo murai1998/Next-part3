@@ -47,28 +47,29 @@ const Question = ({ questions, changeQuestion, deleteQuestion, handleType, chang
   return questions.map((x, i) => {
     console.log('All', x)
     return (
-      <Card style={{minWidth: '100%',   }} key={i} variant="outlined">
+      <Card style={{minWidth: '100%', width: '100%', marginBottom: '1.5em', display: 'flex', flexDirection: 'column'}} key={i} variant="outlined">
+        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flexStart', alignItems: 'flexStart',  padding: '1em '}}>
         <CardHeader
+         style={{ width: '100%', minWidth: '100%', padding: '1em 0 1.2em', color: '#3f51b5'}}
           title={
             <TextField
               fullWidth
-              style={{width: '300px', maxWidth: '100%', minWidth: '100%'}}
               defaultValue={x.quest}
               id="standard-search"
               onChange={(e) => changeQuestion(e, x.id)}
               type="search"
               helperText="Question"
               size="large"
-              style={{color: '#3f51b5'}}
+              style={{ fontWeight: 700, color: '#3f51b5'}}
             />
           }
-          action={
-            <Tooltip title="Delete Question">
-              <IconButton onClick={(e) => deleteQuestion(e, x.id)}>
-                <CancelOutlinedIcon />
-              </IconButton>
-            </Tooltip>
-          }
+          // action={
+          //   <Tooltip title="Delete Question">
+          //     <IconButton onClick={(e) => deleteQuestion(e, x.id)}>
+          //       <CancelOutlinedIcon />
+          //     </IconButton>
+          //   </Tooltip>
+          // }
         />
         <FormControl>
           <Select
@@ -175,10 +176,18 @@ const Question = ({ questions, changeQuestion, deleteQuestion, handleType, chang
         })()}
 
         {x.type === "one" || x.type === "several" ? (
-          <Button onClick={(e) => addAnswer(e, x.id)}>Add an option</Button>
+          <Button style={{background: '#3f51b5', color: '#fff'}}  onClick={(e) => addAnswer(e, x.id)}>Add an option</Button>
         ) : (
           ""
         )}
+        </div>
+        <div style={{borderTop: '2px dotted rgb(63, 81, 181)', display: 'flex', justifyContent: 'center', width: '100%', minWidth: '100%'}}>
+          <Tooltip style={{width: '100%'}}  title="Delete Question">
+              <IconButton onClick={(e) => deleteQuestion(e, x.id)}>
+                <CancelOutlinedIcon style={{color: '#3f51b5'}}/>
+              </IconButton>
+            </Tooltip>
+            </div>
       </Card>
     );
   });
@@ -542,7 +551,7 @@ setShowComment(!state_now)
                    
               <Tooltip title="Delete Comment">
                 <IconButton onClick={deleteComment}>
-                  <CancelOutlinedIcon />
+                  <CancelOutlinedIcon  />
                 </IconButton>
               </Tooltip>
             
@@ -551,7 +560,7 @@ setShowComment(!state_now)
       
        
  
-        <Question  questions={questions} changeQuestion={changeQuestion} deleteQuestion={deleteQuestion} handleType={handleType} changeAnswer={changeAnswer} deleteAnswer={deleteAnswer} addAnswer={ addAnswer} classes={classes}/>
+        <Question style={{display: 'flex', flexDirection: 'column', justifyContent:'center', alignItems: 'center'}}  questions={questions} changeQuestion={changeQuestion} deleteQuestion={deleteQuestion} handleType={handleType} changeAnswer={changeAnswer} deleteAnswer={deleteAnswer} addAnswer={ addAnswer} classes={classes}/>
         <Dialog
         open={open}
         onClose={handleClose}

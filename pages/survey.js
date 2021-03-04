@@ -31,24 +31,10 @@ import SaveIcon from '@material-ui/icons/Save';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    maxWidth: 345,
-  },
-  media: {
-    height: 0,
-    paddingTop: "56.25%", // 16:9
-  },
-  expand: {
-    transform: "rotate(0deg)",
-    marginLeft: "auto",
-    transition: theme.transitions.create("transform", {
-      duration: theme.transitions.duration.shortest,
-    }),
-  },
-  expandOpen: {
-    transform: "rotate(180deg)",
-  },
-  avatar: {
-    backgroundColor: red[500],
+    padding: '4em',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center'
   },
 }));
 
@@ -56,16 +42,20 @@ const useStyles = makeStyles((theme) => ({
 const Question = ({ questions, changeQuestion, deleteQuestion, handleType, changeAnswer, deleteAnswer, addAnswer, classes }) => {
   return questions.map((x, i) => {
     return (
-      <Card key={i} variant="outlined">
+      <Card style={{minWidth: '100%', width: '100%', marginBottom: '1.5em', display: 'flex', flexDirection: 'column'}} key={i} variant="outlined">
+         <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flexStart', alignItems: 'flexStart',  padding: '1em '}}>
         <CardHeader
+         style={{ width: '100%', minWidth: '100%', padding: '1em 0 1.2em', color: '#3f51b5'}}
           title={
             <TextField
-              fullWidth
-              defaultValue={x.quest}
-              id="standard-search"
-              onChange={(e) => changeQuestion(e, x.id)}
-              type="search"
-              helperText="Question"
+            fullWidth
+            defaultValue={x.quest}
+            id="standard-search"
+            onChange={(e) => changeQuestion(e, x.id)}
+            type="search"
+            helperText="Question"
+            size="large"
+            style={{ fontWeight: 700, color: '#3f51b5'}}
             />
           }
           action={
@@ -143,13 +133,7 @@ const Question = ({ questions, changeQuestion, deleteQuestion, handleType, chang
                         type="search"
                         helperText="Option"
                       />
-                      <Tooltip title="Delete Answer">
-                        <IconButton
-                          onClick={(e) => deleteAnswer(e, x.id, y.double_v)}
-                        >
-                          <CancelOutlinedIcon />
-                        </IconButton>
-                      </Tooltip>
+                     
                     </Typography>
                   );
                 } else {
@@ -181,10 +165,18 @@ const Question = ({ questions, changeQuestion, deleteQuestion, handleType, chang
         })()}
 
         {x.type === "one" || x.type === "several" ? (
-          <Button onClick={(e) => addAnswer(e, x.id)}>Add an option</Button>
+          <Button style={{background: '#3f51b5', color: '#fff'}}  onClick={(e) => addAnswer(e, x.id)}>Add an option</Button>
         ) : (
           ""
         )}
+        </div>
+        <div style={{borderTop: '2px dotted rgb(63, 81, 181)', display: 'flex', justifyContent: 'center', width: '100%', minWidth: '100%'}}>
+          <Tooltip style={{width: '100%'}}  title="Delete Question">
+              <IconButton onClick={(e) => deleteQuestion(e, x.id)}>
+                <CancelOutlinedIcon style={{color: '#3f51b5'}}/>
+              </IconButton>
+            </Tooltip>
+            </div>
       </Card>
     );
   });
@@ -428,8 +420,25 @@ setShowComment(!state_now)
 
   return (
     <Layout>
-      <Card className={classes.root}>
-      <CardActions disableSpacing>
+      <Card style={{display: 'flex', 
+    justifyContent: 'center',
+    alignItems: 'center', flexDirection: 'column', padding: '1em 2em'}} className={classes.root}>
+        <div className='structure'>
+        <CardHeader
+        style={{minWidth: '45%', paddingTop: 0, paddingBottom: 0 }}
+          title={
+            <TextField
+            style={{minWidth: '100%'}}
+              defaultValue="Form #"
+              id="standard-search"
+              type="search"
+              onChange={addTitle}
+              helperText="Title"
+              style={{color: '#3f51b5'}}
+            />
+          }
+        />
+      <CardActions style={{width: 'fitContent'}} disableSpacing>
           <Tooltip title="Add Question">
             <IconButton onClick={addQuestion}>
               <AddCircleOutlineOutlinedIcon />
@@ -457,17 +466,8 @@ setShowComment(!state_now)
           {/* </Tooltip> */}
         
         </CardActions>
-        <CardHeader
-          title={
-            <TextField
-              defaultValue="Form #"
-              id="standard-search"
-              type="search"
-              onChange={addTitle}
-              helperText="Title"
-            />
-          }
-        />
+        </div>
+       
         
         <CardContent>
         {showComment ? <FormControl fullWidth>
@@ -490,7 +490,7 @@ setShowComment(!state_now)
         />
        
  
-        <Question questions={questions} changeQuestion={changeQuestion} deleteQuestion={deleteQuestion} handleType={handleType} changeAnswer={changeAnswer} deleteAnswer={deleteAnswer} addAnswer={ addAnswer} classes={classes}/>
+        <Question style={{display: 'flex', flexDirection: 'column', justifyContent:'center', alignItems: 'center'}} questions={questions} changeQuestion={changeQuestion} deleteQuestion={deleteQuestion} handleType={handleType} changeAnswer={changeAnswer} deleteAnswer={deleteAnswer} addAnswer={ addAnswer} classes={classes}/>
         <Dialog
         open={open}
         onClose={handleClose}
