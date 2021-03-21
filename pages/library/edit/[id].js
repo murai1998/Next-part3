@@ -31,6 +31,7 @@ import AccessDenied from '../../../components/access-denied'
 import {useRouter} from 'next/router'
 import SaveIcon from '@material-ui/icons/Save';
 import FormatListNumberedIcon from '@material-ui/icons/FormatListNumbered';
+const hostname = process.env.NEXT_PUBLIC_NEXTAUTH_URL
 
 
 const useStyles = makeStyles((theme) => ({
@@ -47,12 +48,13 @@ const Question = ({ questions, changeQuestion, deleteQuestion, handleType, chang
   return questions.map((x, i) => {
     console.log('All', x)
     return (
-      <Card style={{minWidth: '100%', width: '100%', marginBottom: '1.5em', display: 'flex', flexDirection: 'column'}} key={i} variant="outlined">
+      <Card style={{minWidth: '100%', width: '100%', marginBottom: '1.5em', display: 'flex', flexDirection: 'column', border: '1px solid rgb(63, 81, 181)'}} key={i} variant="outlined">
         <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flexStart', alignItems: 'flexStart',  padding: '1em '}}>
         <CardHeader
          style={{ width: '100%', minWidth: '100%', padding: '1em 0 1.2em', color: '#3f51b5'}}
           title={
             <TextField
+            multiline
               fullWidth
               defaultValue={x.quest}
               id="standard-search"
@@ -103,6 +105,7 @@ const Question = ({ questions, changeQuestion, deleteQuestion, handleType, chang
                   return (
                     <Typography>
                       <TextField
+                      multiline
                         key={y.double_v}
                         defaultValue={y.option}
                         id="standard-search"
@@ -131,6 +134,7 @@ const Question = ({ questions, changeQuestion, deleteQuestion, handleType, chang
                   return (
                     <Typography>
                       <TextField
+                      multiline
                         key={y.double_v}
                         defaultValue={y.option}
                         id="standard-search"
@@ -167,7 +171,7 @@ const Question = ({ questions, changeQuestion, deleteQuestion, handleType, chang
                   <InputLabel htmlFor="standard-adornment-amount">
                     Response
                   </InputLabel>
-                  <Input  fullWidth disabled value='Lorem Ipsum Lorem Ipsum ' />
+                  <Input multiline  fullWidth disabled value='Lorem Ipsum Lorem Ipsum ' />
                 </FormControl>
               );
             default:
@@ -206,8 +210,10 @@ export default function Edit({memory}) {
   const [title, setTitle] = useState(memory.data.title);
   const [showComment, setShowComment] = useState(false)
   const [open, setOpen] = useState(false);
+  const [open2, setOpen2] = useState(false);
   const [ session, loading ] = useSession()
   const [ content , setContent ] = useState()
+  const [this_id, setThisId] = useState(memory.data._id);
   const router = useRouter()
 const [old_data, setOldData]  = useState(memory.data)
   useEffect(()=>{
@@ -219,7 +225,8 @@ const [old_data, setOldData]  = useState(memory.data)
       memory.data.questions.forEach(x =>{
        if( new_index < x.id) new_index = x.id
       })
-      console.log("New Index", new_index + 1)
+      console.log("New Index", memory.data)
+      setComment(memory.data.comment)
       setId(new_index + 1) 
     }
     fetchData()
@@ -230,11 +237,15 @@ const [old_data, setOldData]  = useState(memory.data)
   const handleClickOpen = async() => {
     setOpen(true);
   };
-
+  const handleClickOpen2 = async() => {
+    setOpen2(true);
+  };
   const handleClose = () => {
     setOpen(false);
   };
-  
+  const handleClose2 = () => {
+    setOpen2(false);
+  };
   //========================SUBMIT==================
 
   const handleProceed = async()=>{
@@ -245,28 +256,30 @@ comment: comment,
 }
 let r_id = router.query.id
 console.log("Survey", survey)
-let data3 = await axios.delete(`http://localhost:3000/api/answers/${r_id}`).catch(err=>console.log(err))
-let data = await axios.put(`http://localhost:3000/api/changer/${r_id}`, {
+let data3 = await axios.delete(`${hostname}/${r_id}`).catch(err=>console.log(err))
+let data = await axios.put(`${hostname}/api/changer/${r_id}`, {
   survey
 }).catch(err=>console.log(err))
 console.log("Post", data3)
-router.push(`/library/${session.user.email}`);
+// router.push(`/library/${session.user.email}`);
     setOpen(false);
   }
 
 
   const handleClick = async()=>{
+
     let survey = {
     title: title,
     questions: questions,
     comment: comment,
     }
+    console.log("Export", survey)
     let r_id = router.query.id
     console.log("Survey", survey)
-    let data = await axios.put(`http://localhost:3000/api/changer/${r_id}`, {
+    let data = await axios.put(`${hostname}/api/changer/${r_id}`, {
       survey
     }).catch(err=>console.log(err))
-    console.log("KKK", memory.data._id)
+    console.log("KKK2", memory.data._id)
     router.push(`/library/export/${memory.data._id}`);
         setOpen(false);
 
@@ -280,11 +293,11 @@ router.push(`/library/${session.user.email}`);
     }
     let r_id = router.query.id
     console.log("Survey", survey)
-    let data = await axios.put(`http://localhost:3000/api/changer/${r_id}`, {
+    let data = await axios.put(`${hostname}/api/changer/${r_id}`, {
       survey
     }).catch(err=>console.log(err))
     console.log("KKK", memory.data._id)
-    router.push(`/library/answers/${session.user.email}`);
+    router.push(`/library/answers/${memory.data._id}`);
         setOpen(false);
 
   }
@@ -399,6 +412,14 @@ router.push(`/library/${session.user.email}`);
       setQuestions(all_q);
     }
   };
+//===================DELETE FORM ===============
+
+const deleteForm= async(e, id)=>{
+let deleteF = await axios.delete(`${hostname}/api/changer/${id}`).catch(err=>console.log(err))
+console.log('DELETE', deleteF)
+router.push(`/library/${session.user.email}`);
+}
+
 
 
   //============CHANGE COMMENT===============
@@ -489,11 +510,12 @@ setShowComment(!state_now)
       <Card style={{display: 'flex', 
     justifyContent: 'center',
     alignItems: 'center', flexDirection: 'column', padding: '1em 2em'}}>
-      <div className='structure'>
+      <div className='structure' style={{marginBottom: '2em'}}>
       <CardHeader
       style={{minWidth: '45%', paddingTop: 0, paddingBottom: 0 }}
           title={
             <TextField
+            multiline
             style={{minWidth: '100%'}}
               defaultValue={old_data.title}
               id="standard-search"
@@ -513,7 +535,7 @@ setShowComment(!state_now)
             </IconButton>
           </Tooltip>
           <Tooltip title="Delete Form">
-            <IconButton>
+            <IconButton onClick={handleClickOpen2}>
               <DeleteOutlineOutlinedIcon />
             </IconButton>
           </Tooltip>
@@ -539,25 +561,30 @@ setShowComment(!state_now)
           </Tooltip>
           
         </CardActions>
-        
+     
         </div>
+  
+        {showComment ?<div style={{ width: '100%',  border: '1px solid rgb(63, 81, 181)', }}>   <FormControl style={{display: 'flex', flexDirection: 'row', width: '100%', minWidth: '100%', margin: 0, padding: 0, justifyContent: 'flexStart', alignItems: 'flexStart', float: 'left !important'}}  fullWidth>
         
-        <CardContent>
-        {showComment ? <FormControl fullWidth>
-                    <InputLabel   htmlFor="standard-adornment-amount">
-                      Comment
-                    </InputLabel>
-                    <Input defaultValue={old_data.comment} onChange={addComment}/>
+                 
+                    <TextField
+  
+          id="outlined-multiline-static"
+         
+          multiline defaultValue={old_data.comment} onChange={addComment}
+          variant="outlined"
+          label="Comment"
+          fullWidth
+        />
                    
-              <Tooltip title="Delete Comment">
-                <IconButton onClick={deleteComment}>
-                  <CancelOutlinedIcon  />
+                 
+              <Tooltip  title="Delete Comment">
+                <IconButton  onClick={deleteComment}>
+                  <CancelOutlinedIcon  style={{color: '#3f51b5'}}/>
                 </IconButton>
               </Tooltip>
             
-                  </FormControl> : ('')}
-        </CardContent>
-      
+                  </FormControl>  </div>:('')}
        
  
         <Question style={{display: 'flex', flexDirection: 'column', justifyContent:'center', alignItems: 'center'}}  questions={questions} changeQuestion={changeQuestion} deleteQuestion={deleteQuestion} handleType={handleType} changeAnswer={changeAnswer} deleteAnswer={deleteAnswer} addAnswer={ addAnswer} classes={classes}/>
@@ -578,6 +605,24 @@ setShowComment(!state_now)
           </Button>
         </DialogActions>
       </Dialog>
+
+      <Dialog
+        open={open2}
+        onClose={handleClose2}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{"Do you want to delete this form?"}</DialogTitle>
+       
+        <DialogActions>
+          <Button onClick={handleClose2} color="primary">
+           Cancel
+          </Button>
+          <Button onClick={(e)=>deleteForm(e, this_id)} color="primary" autoFocus>
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
       </Card>
     </Layout>
   );
@@ -586,7 +631,7 @@ setShowComment(!state_now)
 
 
 Edit.getInitialProps = async({query: {id}})=>{
-  const res = await axios.get(`http://localhost:3000/api/changer/${id}`)
+  const res = await axios.get(`${hostname}/api/changer/${id}`)
   .catch(err=>console.log(err))
       return {memory: res.data}
     // return ''

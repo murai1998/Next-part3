@@ -28,6 +28,8 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import axios from 'axios'
 import { useSession, getSession } from 'next-auth/client'
 import SaveIcon from '@material-ui/icons/Save';
+import {useRouter} from 'next/router'
+const hostname = process.env.NEXT_PUBLIC_NEXTAUTH_URL
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -192,11 +194,11 @@ export default function RecipeReviewCard(props) {
   const [id, setId] = useState(0);
   const [double_id, setDouble] = useState(1);
   const [comment, setComment] = useState("");
-  const [title, setTitle] = useState("");
+  const [title, setTitle] = useState("Form #");
   const [showComment, setShowComment] = useState(false)
   const [open, setOpen] = useState(false);
   const [ session, loading ] = useSession()
-
+  const router = useRouter()
 
 
 
@@ -219,11 +221,12 @@ questions: questions,
 comment: comment,
 }
 console.log('SURVEY', survey)
-let data = await axios.post(`http://localhost:3000/api/creator/${session.user.email}`, {
+let data = await axios.post(`${hostname}/api/creator/${session.user.email}`, {
   survey
 }).catch(err=>console.log(err))
 console.log("DATTA", data)
     setOpen(false);
+    router.push(`/library/${session.user.email}`);
   }
   
   //===========CHANGE QUESTION=============
@@ -484,10 +487,7 @@ setShowComment(!state_now)
             
                   </FormControl> : ('')}
         </CardContent>
-        <CardMedia
-          className={classes.media}
-          image="/static/images/cards/paella.jpg"
-        />
+     
        
  
         <Question style={{display: 'flex', flexDirection: 'column', justifyContent:'center', alignItems: 'center'}} questions={questions} changeQuestion={changeQuestion} deleteQuestion={deleteQuestion} handleType={handleType} changeAnswer={changeAnswer} deleteAnswer={deleteAnswer} addAnswer={ addAnswer} classes={classes}/>

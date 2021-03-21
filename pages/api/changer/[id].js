@@ -30,15 +30,16 @@ if(!survey) res.status(400).json({ success: false });
             res.status(400).json({ success: false, error: error });
         }
         break;
-    //     case 'DELETE':
-    //         try {
-    //             const review = await Review.deleteOne({_id: id});
-    // if(!review) res.status(400).json({ success: false });
-    //             res.status(200).json({ success: true, data: {} })
-    //         } catch (error) {
-    //             res.status(400).json({ success: false });
-    //         }
-    //         break;
+        case 'DELETE':
+            try {
+                console.log('IIIIDD', id)
+                const survey = await Survey.deleteOne({_id: id});
+    if(!survey) res.status(400).json({ success: false });
+                res.status(200).json({ success: true, data: {} })
+            } catch (error) {
+                res.status(400).json({ success: false });
+            }
+            break;
     // case 'POST':
     //     try {
     //         const new_survey ={

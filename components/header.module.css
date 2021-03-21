@@ -6,6 +6,7 @@ width: 100% !important;
 min-width: 100%!important;
 max-width: 200px !important;
 margin: 3em 0;
+
 }
 .signedInStatus {
   display: block;
@@ -74,6 +75,7 @@ flex-direction: row;
 flex-wrap: wrap;
 justify-content: center;
 align-items: center;
+
 
 }
 #toolbar{

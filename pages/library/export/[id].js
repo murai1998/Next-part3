@@ -32,16 +32,42 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import Button from '@material-ui/core/Button';
 import { Alert, AlertTitle } from '@material-ui/lab';
 import {useRouter} from 'next/router'
+import ReplyOutlinedIcon from '@material-ui/icons/ReplyOutlined';
+import FormatListNumberedIcon from '@material-ui/icons/FormatListNumbered';
+import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
+const hostname = process.env.NEXT_PUBLIC_NEXTAUTH_URL
 
-const List2 =({handleChange, handleChange2, handleName, handleEmail,  handleSubmit,  title, comment, questions,  errors, newAnswers, showAlert})=>{
-console.log(questions)
+const List2 =({handleClick01, handleClick02, handleChange, handleChange2, handleName, handleEmail,  handleSubmit,  title, comment, questions,  errors, newAnswers, showAlert, copy})=>{
+
 
     return (
-<Card >
+<Card style={{display: 'flex', flexDirection: 'column', justifyContent: 'flexStart', alignItems: 'flexStart', padding: '1em 1em' }}>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Reggae+One&display=swap');
+</style>
+{copy ? <div style={{float: 'right !important', textAlign: 'right !important', display: 'flex', alignItems: 'flexEnd', width: '100%', paddingTop: 0}}>
+  <Tooltip  align='right' title="Go back">
+            <IconButton onClick={handleClick02}>
+              <KeyboardBackspaceIcon  style={{background: 'rgb(0 0 0 / 4%)', padding: '0.1em', borderRadius: '50%'}}/>
+            </IconButton>
+          </Tooltip>
+  <Tooltip align='right' title="Responces">
+            <IconButton onClick={handleClick01}>
+              <FormatListNumberedIcon  style={{background: 'rgb(0 0 0 / 4%)', padding: '0.1em', borderRadius: '50%'}}/>
+            </IconButton>
+          </Tooltip>
+        
+</div> : ('')}
       <CardHeader
-        title={title}
-        subheader={comment}
+      style={{color: 'rgb(63, 81, 181)', fontSize: '1.5em', fontWeight: 700, paddingTop: '0.5em'}}
+        title={<Typography variant="h4" component="h5" style={{borderBottom: '0.1px solid rgb(118, 118, 118)'}}>
+       {title}
+      </Typography>}
+      subheader={ <Typography style={{color: '#333', fontWeight: 500, background: '#f5005717', padding: '1em 0'}} variant="div" component="h6">
+      {comment}
+      </Typography>}
       />
+     
        <form  noValidate autoComplete="off">
      {showAlert  ?<Alert severity="error">
         <AlertTitle>Error</AlertTitle>
@@ -51,14 +77,15 @@ console.log(questions)
       {questions.map((x, index) =>{
              return( <CardContent>
       <InputLabel >
-      {x.quest}
-                  </InputLabel>
-
+      <Typography style={{color: 'rgb(63, 81, 181)', fontWeight: 600, }} variant="div" component="h4">
+      <span style={{color: 'rgb(63, 81, 181)', fontWeight: 600, }}>{index+1}.</span> {x.quest}
+      </Typography>
+      </InputLabel>
                   {x.type === 'one' ? 
                   
                  <RadioGroup  aria-label="gender" name="gender1"  onChange={(e) =>handleChange(e, index, x.quest, x.type)}>  
                  {x.answer.map((y, in2) => {
-                console.log("array of answers", y);
+                
                 if (y) {
                   return (
                     <Typography>
@@ -79,7 +106,7 @@ console.log(questions)
             if (y) {
               return (
                 <Typography >
-                            <FormControlLabel
+                            <FormControlLabel 
           control={<Checkbox defaultValue={false} name={y.option} onChange={(e) =>handleChange2(e, index, x.quest, x.type)}  />}
           label={y.option}
         />
@@ -93,13 +120,14 @@ console.log(questions)
         }
 
 {x.type === 'short' ? 
-       <FormControl>
-       <TextField onChange={(e) =>handleChange(e, index, x.quest, x.type)} id="standard-basic" placeholder="Your answer" />
+       <FormControl style={{padding: '0.5em 1em'}}>
+       <TextField onChange={(e) =>handleChange(e, index, x.quest, x.type)} id="standard-basic" placeholder="Short answer" />
      </FormControl>
      :('')}
       {x.type === 'long' ? 
-       <FormControl>
-       <TextField fullWidth onChange={(e) =>handleChange(e, index, x.quest, x.type)} id="standard-basic" placeholder="Your answer" />
+       <FormControl fullWidth style={{padding: '0.5em 0'}}>
+       <TextField multiline
+          rows={2} variant="outlined" fullWidth onChange={(e) =>handleChange(e, index, x.quest, x.type)} id="standard-basic" placeholder="Full answer" />
      </FormControl>
      :('')}          
      
@@ -113,7 +141,8 @@ console.log(questions)
     
       />
       <CardActions disableSpacing>
-      <Button onClick={handleSubmit}>Submit</Button>
+      <Button fullWidth style={{background: '#3f51b5', color: '#fff', padding: '0.3em 2em'}} onClick={handleSubmit}>Submit</Button>
+
       </CardActions> 
     </Card> 
       
@@ -134,11 +163,14 @@ export default function Library ({list}) {
   const textAreaRef = useRef(null);
   const [copySuccess, setCopySuccess] = useState('');
   const [showAlert, setShowAlert] = useState(false)
+  const [showForm, setShowForm] =useState(true)
   // Fetch content from protected route
   useEffect(()=>{
     const fetchData = async () => {
       const res = await fetch('/api/examples/protected')
       const json = await res.json()
+      console.log('LLLL', list.data)
+      setListIt(list.data)
       if (json.content) { setContent(json.content) }
       if(session){
         if(session.user.email ===  list.data.user_id){
@@ -152,9 +184,9 @@ export default function Library ({list}) {
 
 
   const handleChange2 = (event, i, quest, type) => {
-    console.log('kjkjkjkjk', event.target.checked)
+
     let old_data = [...newAnswers]
-    console.log('old data', old_data)
+
     let inn = 0
     if(old_data.filter(x => x.id === i).length > 0){
      let found = old_data.filter(x => x.id === i)[0].answers
@@ -187,12 +219,22 @@ export default function Library ({list}) {
     setEmail(e.target.value)
   }
 
+  const handleClick01 = async()=>{
+    let r_id = router.query.id
+    router.push(`/library/answers/${r_id }`);
+     
+  }
+  const handleClick02 = async()=>{
+    let r_id = router.query.id
+    router.push(`/library/edit/${r_id }`);
+     
+  }
 const copyToClipboard = (e, loc) => {
-  console.log('Copy', loc)
+
     textAreaRef.current.select();
     document.execCommand('copy');
     e.target.focus();
-    setCopySuccess('Copied!')
+    setCopySuccess(<div style={{color: 'rgb(63, 81, 181)', paddingTop: '0.5em'}}>Copied!</div>)
     setTimeout(() =>{
       setCopySuccess('');
     }, 1000)
@@ -200,7 +242,7 @@ const copyToClipboard = (e, loc) => {
   };
   const handleChange = (event, i, quest, type) => {
     let old_data = [...newAnswers]
-    console.log('old data', old_data)
+
     let inn = 0
     if(old_data.filter(x => x.id === i).length > 0){
       old_data.forEach((x, i) => {
@@ -223,7 +265,7 @@ const copyToClipboard = (e, loc) => {
     if(newAnswers.answers === undefined )
    {
       err.answers = 'Answers'
-      console.log('yes', err.answers)
+
     }
     return err
   }
@@ -231,8 +273,9 @@ const copyToClipboard = (e, loc) => {
 
 const handleSubmit= async(e)=>{
   let r_id = router.query.id
-  console.log("IIIDD", r_id)
+
 e.preventDefault()
+setShowForm(false)
 let index = 0;
 newAnswers.forEach(y =>{
   if(y.answers){
@@ -241,7 +284,7 @@ index++
     }
   }
 })
-console.log('Length', listIt.questions.length, index)
+console.log('Length', listIt.questions.length)
 if(index !== listIt.questions.length){
   setShowAlert(true)
   return
@@ -257,10 +300,10 @@ let ans = [...newAnswers]
    let send_obj={
      answers: newAnswers
    }
-   let data = await axios.post(`http://localhost:3000/api/answers/${r_id}`, {
+   let data = await axios.post(`${hostname}/api/answers/${r_id}`, {
     send_obj
 }).catch(err=>console.log(err))
- console.log('object', data)
+
  
 }
 }
@@ -282,22 +325,42 @@ let ans = [...newAnswers]
   //if (!session) { return  <Layout><AccessDenied/></Layout> }
 
   // If session exists, display content
-
+console.log('CHECK list', list)
   return (
  
-    <Layout>
-    {console.log('LIST', newAnswers)}
-    {copy ? <div><Typography>Copy link of your form</Typography> <textarea style={{width: '100%'}}  ref={textAreaRef} value={window.location.href} />
+    <Layout style={{}}>
+
+    {copy ?
+    <div style={{marginTop: '4em' }}>
+      <Typography>Copy form URL</Typography>
+     
+    <div style={{display: 'flex', width: '100%', justifyContent: 'center', alignItems: 'center'}}> <textarea style={{width: '100%'}}  ref={textAreaRef} value={window.location.href} />
     {
     
        document.queryCommandSupported('copy') &&
-        <div>
-          <button onClick={(e)=>copyToClipboard(e, window.location.href)}>Copy</button> 
-          {copySuccess}
+        <div >
+          <button style={{width: '100%', padding: '0.65em 2em', fontWeight: 700}} onClick={(e)=>copyToClipboard(e, window.location.href)}>Copy</button> 
+        
         </div>
       }
-    </div> :('')}
-        <List2 handleChange={handleChange} handleChange2={handleChange2} handleName={handleName} handleEmail={handleEmail} handleSubmit={handleSubmit} title={listIt.title} comment={listIt.comment} questions={listIt.questions}  errors={errors} newAnswers={newAnswers} showAlert={showAlert}/>
+    </div>
+    {copySuccess}
+    {showForm ?<hr/> : ('')}
+     </div> :('')}
+      {showForm ? <List2 handleClick02={handleClick02} handleClick01={handleClick01} handleChange={handleChange} handleChange2={handleChange2} handleName={handleName} handleEmail={handleEmail} handleSubmit={handleSubmit} title={listIt.title} comment={listIt.comment} questions={listIt.questions}  errors={errors} newAnswers={newAnswers} showAlert={showAlert} copy={copy}/> :
+     <Card style={{height:'15em'}}><Typography >
+       <style>
+@import url('https://fonts.googleapis.com/css2?family=Reggae+One&display=swap');
+</style>
+      <center><div style={{ marginTop: 0,  padding: '0 0.5em'}}>
+       
+       <span style={{fontSize: '1.4em'}}>Thank you for submitting the form</span><br></br> Your response has been recorded</div></center></Typography>
+       <CardMedia
+      style={{width: '100%', height: '100%'}}
+    image='https://cdn.shopify.com/s/files/1/2636/2774/files/logo_113a5c53-27b4-4df4-b1ad-74fb51a6b90b.png?v=1615592239'
+       width='227' height='188'
+      />
+       </Card>}
      
     </Layout>
   )
@@ -305,9 +368,19 @@ let ans = [...newAnswers]
 
 
 Library.getInitialProps = async({query: {id}})=>{
-
-    const res = await axios.get(`http://localhost:3000/api/changer/${id}`)
-    .catch(err=>console.log(err))
-        return {list: res.data}
+  try{
+    if(id){
+    const res = await axios.get(`${hostname}/api/changer/${id}`)
+    return {list: res.data}
+    }
+    else return {list: []}
+  }catch{
+    err=>{console.log(err)
+    return
+    }
+  }
+    //console.log('Props', res.data)
+   
+       
       // return ''
     }

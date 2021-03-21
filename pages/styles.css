@@ -1,4 +1,6 @@
-
+.PrivateSwitchBase-input-240{
+  display: none !important;
+}
 
 body {
   font-family: -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
@@ -70,4 +72,46 @@ max-width: 700px;
      flex-direction: row;
 }
 
+}
+
+input[type="radio" i] {
+  appearance: none !important;
+  margin: 0 !important;
+  display: none !important;
+}
+
+input[type="checkbox" i] {
+  appearance: none !important;
+  margin: 0 !important;
+  display: none !important;
+}
+
+.MuiDataGrid-root .MuiDataGrid-toolbar {
+  display: flex;
+  flex-wrap: wrap !important;
+ 
+  background: #f5005717;
+  align-items: center;
+  justify-content: space-around !important;
+    padding:  1em 0 !important;
+
+}
+
+.MuiButton-textSizeSmall {
+  padding: 4px 5px;
+  font-size: 0.8125rem;
+  border: 1px silg;
+  border: 1px solid #3f51b5 !important;
+  background: #fff !important;
+}
+
+.MuiButton-label svg{
+  display: none !important;
+}
+.MuiDataGrid-colCellTitle {
+  overflow: hidden;
+  font-weight: 500;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-weight: 900 !important;
 }

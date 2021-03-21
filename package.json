@@ -6,16 +6,20 @@
   "homepage": "http://next-auth-example.now.sh",
   "main": "",
   "scripts": {
-    "dev": "next",
+    "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start -p $PORT",
+    "heroku-postbuild": "npm run build",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Iain Collins <me@iaincollins.com>",
   "license": "ISC",
   "dependencies": {
     "@material-ui/core": "^4.11.2",
+    "@material-ui/data-grid": "^4.0.0-alpha.22",
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.57",
+    "@material-ui/x-grid-data-generator": "^4.0.0-alpha.22",
     "antd": "^4.9.4",
     "axios": "^0.21.1",
     "mongodb": "^3.6.3",

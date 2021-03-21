@@ -11,39 +11,29 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+import {useRouter} from 'next/router'
 import Link from 'next/link'
 import Card from '@material-ui/core/Card';
-const List2 =({list})=>{
-
-if(list){
-    let obj2 = {}
-  console.log('This list', list.data[0].answers)
-  if(list.success === true){
-return list.data.map((z, innn) =>  <TableRow key={innn}>{z.answers.sort((a, b) => a.id - b.id).map((x, i) => (
-        x.type === 'several'? <TableCell  align="center" component="th" scope="row">
-
-      {Object.keys(x.answers).join(', ')}
-        </TableCell> :<TableCell>{x.answers}</TableCell>
-      
-    ))} </TableRow>)
-
-  
-  }
-  else{
-    return 'false'
-  }
-}
-else{
-  return 'false2'
-}
-}
-
-
+import { DataGrid, GridToolbar } from '@material-ui/data-grid';
+import { useDemoData } from '@material-ui/x-grid-data-generator';
+import Tooltip from "@material-ui/core/Tooltip";
+import IconButton from '@material-ui/core/IconButton';
+import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
+import SaveAltIcon from '@material-ui/icons/SaveAlt';
+const hostname = process.env.NEXT_PUBLIC_NEXTAUTH_URL
 
 
 export default function Library ({list}) {
   const [ session, loading ] = useSession()
   const [ content , setContent ] = useState()
+  const router = useRouter()
+  const { data } = useDemoData({
+    dataSet: 'Commodity',
+    rowLength: 10,
+    maxColumns: 10,
+  });
+
+
 
   // Fetch content from protected route
   useEffect(()=>{
@@ -51,6 +41,10 @@ export default function Library ({list}) {
       const res = await fetch('/api/examples/protected')
       const json = await res.json()
       if (json.content) { setContent(json.content) }
+     console.log('list.data', list.data)
+  
+   
+   
     }
     fetchData()
   },[session])
@@ -64,6 +58,64 @@ export default function Library ({list}) {
       fontSize: 14,
     },
   }))(TableCell);
+
+
+  const handleClick01 = async()=>{
+    let r_id = router.query.id
+    router.push(`/library/edit/${r_id }`);
+     
+  }
+  const handleClick02 = async()=>{
+    let r_id = router.query.id
+    router.push(`/library/export/${r_id }`);
+     
+  }
+
+  const table_data =(list)=>{
+
+    if(list){
+        let obj2 = {}
+      console.log('This list', list.data)
+    
+      if(list.success === true ){
+        let new_obj = {columns: [], rows: []};
+        list.data.map((z, innn) =>  z.answers.sort((a, b) => a.id - b.id).map((x, i) => {
+         if(i === 0) new_obj.rows.push({id: z._id})
+          x.type === 'several'? 
+          new_obj.rows[innn][x.question] = Object.keys(x.answers).join(', ')
+         : new_obj.rows[innn][x.question] = x.answers
+        
+        }))
+    if(list.data.length > 0){
+      list.data[0].answers.map((r1, i) =>{
+    if(i === 0){
+      new_obj.columns.push({field: "id", headerName: 'Id', hide: true })
+      new_obj.columns.push({hide: false})
+      new_obj.columns[i+1].field = r1.question
+      new_obj.columns[i+1].headerName = r1.question
+      new_obj.columns[i+1].width  = 250
+    }
+    else{
+      new_obj.columns.push({hide: false})
+      new_obj.columns[i+1].field = r1.question
+      new_obj.columns[i+1].headerName = r1.question
+      new_obj.columns[i+1].width  = 250
+    }
+      })}
+      console.log('HERE@', new_obj)
+    return new_obj
+      
+      }
+      else{
+        return 'false'
+      }
+    }
+    else{
+      return 'false2'
+    }
+    }
+    let values = table_data(list)
+    console.log('DATA', values)
   // When rendering client side don't display anything until loading is complete
   if (typeof window !== 'undefined' && loading) return null
 
@@ -73,23 +125,30 @@ export default function Library ({list}) {
   // If session exists, display content
   return (
     <Layout>
-      <h1>Your Library</h1>
-      {list.data.length > 0 ?
-      <Table  size="small" aria-label="a dense table">
-
-        <TableHead >
-          <TableRow >
-          {list.data[0].answers.map(r1 =>{
-            return<StyledTableCell align="center">{r1.question}</StyledTableCell>
-              })}
-          </TableRow>
-        </TableHead>
-        <TableBody>
-            <List2 list={list}/> 
+      <div style={{float: 'right !important', textAlign: 'right !important', display: 'flex', alignItems: 'flexEnd', width: '100%'}}>
+  <Tooltip  align='right' title="Go back">
+            <IconButton onClick={handleClick01}>
+              <KeyboardBackspaceIcon  style={{background: 'rgb(0 0 0 / 4%)', padding: '0.1em', borderRadius: '50%'}}/>
+            </IconButton>
+          </Tooltip>
+  <Tooltip align='right' title="Export">
+            <IconButton onClick={handleClick02}>
+              <SaveAltIcon  style={{background: 'rgb(0 0 0 / 4%)', padding: '0.1em', borderRadius: '50%'}}/>
+            </IconButton>
+          </Tooltip>
         
-        </TableBody>
-       
-      </Table>
+</div> 
+      {list.data.length > 0 ?
+    
+    <div style={{ height: 400, width: '100%' }}>
+    <DataGrid
+      {... table_data(list)}
+      components={{
+        Toolbar: GridToolbar,
+      }}
+    />
+  </div>
+   
          : 
          
          <Table  size="small" aria-label="a dense table">
@@ -104,15 +163,16 @@ export default function Library ({list}) {
          }
        
 
-     
+    
     </Layout>
   )
 }
 
-
+// table_data(list)
 Library.getInitialProps = async({query: {id}})=>{
 
-const res = await axios.get(`http://localhost:3000/api/answers/${id}`)
+  // ${process.env.NEXTAUTH_URL}
+const res = await axios.get(`${hostname}/api/answers/${id}`)
 .catch(err=>console.log(err))
 console.log(res.data)
     return {list: res.data}

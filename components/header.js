@@ -32,7 +32,7 @@ export default function Header () {
   const [ session, loading ] = useSession()
   
   return (
-    <header id='header' style={{padding: '0.5em 0'}}>
+    <header id='header' style={{padding: '0.5em 0', marginBottom: '3em'}}>
       <noscript>
         <style>{`.nojs-show { opacity: 1; top: 0; }`}</style>
       </noscript>
@@ -53,7 +53,7 @@ export default function Header () {
           </>}
           {session && <>
    
-              <div><nav>
+              <div style={{position: 'fixed', top: 0, background: '#fff',   overflow: 'hidden', paddingRight: '1em', zIndex: '10'}}><nav>
         <ul className={styles.navItems}>
   
         <StyledBreadcrumb
@@ -100,8 +100,10 @@ export default function Header () {
       </div>
         </ul>
      
-      </nav></div>
+      </nav>
       <hr/>
+      </div>
+     
           </>}
           
         </p>

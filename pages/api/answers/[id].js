@@ -12,7 +12,10 @@ const {
 switch (method) {
     case 'GET':
         try {
+            console.log('Id', id)
             const answers = await Answers.find({form_id: id});
+            const answers2 = await Answers.find();
+            console.log('ddd', answers2)
             console.log('AAAA', answers)
 if(!answers) res.status(400).json({ success: false });
             res.status(200).json({ success: true, data: answers })

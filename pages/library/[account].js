@@ -12,7 +12,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Link from 'next/link'
-
+const hostname = process.env.NEXT_PUBLIC_NEXTAUTH_URL
 
 const List2 =({list})=>{
 if(list){
@@ -93,9 +93,9 @@ export default function Library ({list}) {
         </TableHead>
         <TableBody>
           { list.data.length <=4 ?
-        <TableRow key='0'>
+        <TableRow key='+'>
         <TableCell style={{ fontSize: '1.1em'}}  align="center" component="th" scope="row">
-          0
+          +
         </TableCell>
        
         <TableCell style={{ fontSize: '1.1em'}}  align="left" component="th" scope="row">
@@ -105,7 +105,21 @@ export default function Library ({list}) {
         </TableCell>
      
     
-      </TableRow> : ('')}
+      </TableRow> : 
+      
+      <TableRow key='01'>
+      <TableCell style={{ fontSize: '1.1em'}}  align="center" component="th" scope="row">
+        
+      </TableCell>
+     
+      <TableCell style={{ fontSize: '1.1em'}}  align="left" component="th" scope="row">
+      <Link style={{  textDecoration: 'none'}} href={`/survey`}><a style={{ textDecoration: 'none' }}>
+        <i>You have reached the limit of free edition</i>
+        </a></Link>
+      </TableCell>
+   
+  
+    </TableRow>}
         <List2 list={list}/>
         </TableBody>
       </Table>
@@ -116,7 +130,7 @@ export default function Library ({list}) {
 
 
 Library.getInitialProps = async({query: {account}})=>{
-const res = await axios.get(`http://localhost:3000/api/creator/${account}`)
+const res = await axios.get(`${hostname}/api/creator/${account}`)
 .catch(err=>console.log(err))
     return {list: res.data}
 }
