@@ -381,6 +381,6 @@ Library.getInitialProps = async({query: {id}})=>{
   }
     //console.log('Props', res.data)
    
-       
+       //
       // return ''
     }

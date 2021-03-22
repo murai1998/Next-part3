@@ -221,7 +221,7 @@ questions: questions,
 comment: comment,
 }
 console.log('SURVEY', survey)
-let data = await axios.post(`${hostname}/api/creator/${session.user.email}`, {
+let data = await axios.post(`https://first-step911.herokuapp.com/api/creator/${session.user.email}`, {
   survey
 }).catch(err=>console.log(err))
 console.log("DATTA", data)
