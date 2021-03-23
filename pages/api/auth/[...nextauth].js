@@ -45,7 +45,8 @@ const options = {
     // }),
     Providers.Google({
       clientId: process.env.GOOGLE_ID,
-      clientSecret: process.env.GOOGLE_SECRET
+      clientSecret: process.env.GOOGLE_SECRET,
+      authorizationUrl: 'https://accounts.google.com/o/oauth2/auth?response_type=code'
     }),
     // Providers.Twitter({
     //   clientId: process.env.TWITTER_ID,

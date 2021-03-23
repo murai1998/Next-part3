@@ -8,6 +8,7 @@ import Chip from '@material-ui/core/Chip';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
 import LiveHelpIcon from '@material-ui/icons/LiveHelp';
 import MeetingRoomIcon from '@material-ui/icons/MeetingRoom';
+import {useRouter} from 'next/router'
 
 const StyledBreadcrumb = withStyles((theme) => ({
   root: {
@@ -30,9 +31,9 @@ const StyledBreadcrumb = withStyles((theme) => ({
 // rendering, and avoids any flash incorrect content on initial page load.
 export default function Header () {
   const [ session, loading ] = useSession()
-  
+  const router = useRouter()
   return (
-    <header id='header' style={{padding: '0.5em 0', marginBottom: '3em'}}>
+    <header id='header' style={{padding: '1.5em 0', marginBottom: '2em'}}>
       <noscript>
         <style>{`.nojs-show { opacity: 1; top: 0; }`}</style>
       </noscript>
@@ -58,7 +59,7 @@ export default function Header () {
   
         <StyledBreadcrumb
         component="a"
-        style={{height: '100%', background: '#fff', paddingBottom: '1em'}}
+        style={{height: '100%', background: '#fff', paddingBottom: '1em', paddingTop: '2em'}}
         label={<div style={{fontWeight: 700}}><span style={{fontSize:'0.9em'}}>Signed in as</span><br></br><span style={{color: 'rgb(63, 81, 181)', fontSize: '1.1em'}}> {session.user.email || session.user.name}</span></div>}
         icon={ session.user.image && <span style={{backgroundImage: `url(${session.user.image})` }} className={styles.avatar}/>}
       />
@@ -75,9 +76,9 @@ export default function Header () {
       <StyledBreadcrumb  style={{marginTop: '1em',  marginLeft: '1em'}} component="a" href={`/library/${session.user.email}`}  icon={<MenuBookIcon style={{color: '#3f51b5'}} fontSize="large" />} label="Library" />
       <StyledBreadcrumb
         component="a"
-        href="/info"
+        href="/contact"
         style={{marginTop: '1em',  marginLeft: '1em'}}
-        label="About"
+        label="Contact"
         icon={<LiveHelpIcon style={{color: '#3f51b5'}} fontSize="large" />}
       />
 <StyledBreadcrumb
@@ -86,9 +87,12 @@ export default function Header () {
         href={`/api/auth/signout`}
         label="Sign Out"
         style={{marginTop: '1em', marginLeft: '1em'}}
-        onClick={(e) => {
+        onClick={async (e) => {
           e.preventDefault()
-          signOut()
+          await router.push(`/`);
+           await signOut()
+       
+
         }}
         icon={<MeetingRoomIcon style={{color: '#3f51b5'}} fontSize="large" />}
       />

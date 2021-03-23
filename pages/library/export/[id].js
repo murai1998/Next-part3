@@ -35,6 +35,7 @@ import {useRouter} from 'next/router'
 import ReplyOutlinedIcon from '@material-ui/icons/ReplyOutlined';
 import FormatListNumberedIcon from '@material-ui/icons/FormatListNumbered';
 import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
+import CakeIcon from '@material-ui/icons/Cake';
 const hostname = process.env.NEXT_PUBLIC_NEXTAUTH_URL
 
 const List2 =({handleClick01, handleClick02, handleChange, handleChange2, handleName, handleEmail,  handleSubmit,  title, comment, questions,  errors, newAnswers, showAlert, copy})=>{
@@ -348,18 +349,14 @@ console.log('CHECK list', list)
     {showForm ?<hr/> : ('')}
      </div> :('')}
       {showForm ? <List2 handleClick02={handleClick02} handleClick01={handleClick01} handleChange={handleChange} handleChange2={handleChange2} handleName={handleName} handleEmail={handleEmail} handleSubmit={handleSubmit} title={listIt.title} comment={listIt.comment} questions={listIt.questions}  errors={errors} newAnswers={newAnswers} showAlert={showAlert} copy={copy}/> :
-     <Card style={{height:'15em'}}><Typography >
+     <Card style={{height:'15em', margin: "auto !important", padding: "2em 0"}}><Typography style={{ margin: "auto !important", padding: "auto"}}>
        <style>
 @import url('https://fonts.googleapis.com/css2?family=Reggae+One&display=swap');
 </style>
-      <center><div style={{ marginTop: 0,  padding: '0 0.5em'}}>
+      <center><div style={{ marginTop: "auto",  padding: '0 0.5em'}}>
        
-       <span style={{fontSize: '1.4em'}}>Thank you for submitting the form</span><br></br> Your response has been recorded</div></center></Typography>
-       <CardMedia
-      style={{width: '100%', height: '100%'}}
-    image='https://cdn.shopify.com/s/files/1/2636/2774/files/logo_113a5c53-27b4-4df4-b1ad-74fb51a6b90b.png?v=1615592239'
-       width='227' height='188'
-      />
+       <span style={{fontSize: '1.4em', color: '#3f51b5', fontWeight: 700}}>Thank you for submitting the form</span><br></br> <i style={{fontSize: '0.9em'}}>Your response has been recorded</i></div></center></Typography>
+ <center><CakeIcon style={{ fontSize: 120, marginTop: '0.2em' }} color="primary" /></center>
        </Card>}
      
     </Layout>

@@ -115,3 +115,8 @@ input[type="checkbox" i] {
   text-overflow: ellipsis;
   font-weight: 900 !important;
 }
+
+
+#__next-prerender-indicator{
+display: none;
+}

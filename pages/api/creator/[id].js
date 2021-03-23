@@ -13,6 +13,7 @@ switch (method) {
     case 'GET':
         try {
             const survey = await Survey.find();
+            console.log("GET", survey)
 if(!survey) res.status(400).json({ success: false });
             res.status(200).json({ success: true, data: survey })
         } catch (error) {

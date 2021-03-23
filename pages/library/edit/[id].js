@@ -415,7 +415,7 @@ console.log("Post", data3)
 //===================DELETE FORM ===============
 
 const deleteForm= async(e, id)=>{
-let deleteF = await axios.delete(`https://first-step911.herokuapp.com/api/changer/${id}`).catch(err=>console.log(err))
+let deleteF = await axios.delete(`http://localhost:3000/api/changer/${id}`).catch(err=>console.log(err))
 console.log('DELETE', deleteF)
 router.push(`/library/${session.user.email}`);
 }
@@ -631,7 +631,7 @@ setShowComment(!state_now)
 
 
 Edit.getInitialProps = async({query: {id}})=>{
-  const res = await axios.get(`https://first-step911.herokuapp.com/api/changer/${id}`)
+  const res = await axios.get(`http://localhost:3000/api/changer/${id}`)
   .catch(err=>console.log(err))
       return {memory: res.data}
     // return ''

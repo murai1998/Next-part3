@@ -18,6 +18,7 @@ const List2 =({list})=>{
 if(list){
   console.log('This list', list)
   if(list.success === true){
+    console.log('TIME', list)
     return list.data.map((x, i) => (
       <TableRow key={i}>
         <TableCell style={{ fontSize: '1.1em'}}  align="center" component="th" scope="row">
@@ -29,7 +30,11 @@ if(list){
           </a></Link>
         </TableCell>
         
-    
+        {/* <TableCell style={{ fontSize: '1.1em'}} align="left" component="th" scope="row">
+       
+          {x.title}
+         
+        </TableCell> */}
       </TableRow>
       
     ))
@@ -82,7 +87,7 @@ export default function Library ({list}) {
       <style>
 @import url('https://fonts.googleapis.com/css2?family=Reggae+One&display=swap');
 </style>
-      <h1 style={{fontFamily: 'Reggae One, cursive', marginTop: 0, color: '#f50057', padding: '0 0.5em'}}>Your Library</h1>
+      <p style={{fontFamily: 'Reggae One, cursive', marginTop: 0, color: '#f50057', padding: '1em 0.5em 0', fontSize: '1.6em', textAlign: 'center'}}>Your Library</p>
       <TableContainer component={Paper}>
       <Table  size="small" aria-label="a dense table">
         <TableHead >
@@ -130,7 +135,7 @@ export default function Library ({list}) {
 
 
 Library.getInitialProps = async({query: {account}})=>{
-const res = await axios.get(`${hostname}/api/creator/${account}`)
+const res = await axios.get(`http://localhost:3000/api/creator/${account}`)
 .catch(err=>console.log(err))
     return {list: res.data}
 }

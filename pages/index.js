@@ -130,18 +130,18 @@ export default function Page() {
           Next{bull}Step
         </Typography>
         <Typography className={classes.pos} color="textSecondary">
-          adjective
+         app
         </Typography>
-        <Typography variant="body2" component="div">
-        {bull}Great tool to build online surveys
+        <Typography style={{paddingTop: '1em'}} variant="body2" component="div">
+        {bull} Great tool to build online surveys
           <br />
           <br/>
           <Typography align='center' className={classes.pos} color="textSecondary">
- {'"REALIABLE, FAST, FREE"'}
+ {'REALIABLE, FAST, FREE'}
         </Typography>
         
           <br/>
-          {bull}Place to find respondents for the surveys
+        <center>  {bull} Place to find respondents for the surveys</center>
         </Typography>
       </CardContent>
       {/* <CardActions>
@@ -164,8 +164,11 @@ export default function Page() {
  {session && (
       
          <Layout>
-          <p>Hi, {session.user.name} </p>
-          <p>We are very happy you have jouned us. Welcome!</p>
+                <style>
+@import url('https://fonts.googleapis.com/css2?family=Reggae+One&display=swap');
+</style>
+          <p style={{paddingTop: "2em", fontSize: '1.3em', textAlign: 'center', color: '#f50057', fontFamily: 'Reggae One, cursive'}}>Hello, {session.user.name}. Thank you for joining us. </p>
+          <p style={{fontSize: '1em', textAlign: 'center', }}>Creating forms and surveys never seems easier than with <span style={{color: "rgb(63, 81, 181)", fontWeight: 700}}>NextStep</span>. Our app gives you the ability to complete a variety of different tasks within a couple of clicks for free. No matter what browser you use or how complex your form is, <span style={{color: "rgb(63, 81, 181)", fontWeight: 700}}>NextStep</span> is here to help you!</p>
           </Layout>
          
       )} 
