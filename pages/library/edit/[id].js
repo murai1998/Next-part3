@@ -31,6 +31,7 @@ import AccessDenied from '../../../components/access-denied'
 import {useRouter} from 'next/router'
 import SaveIcon from '@material-ui/icons/Save';
 import FormatListNumberedIcon from '@material-ui/icons/FormatListNumbered';
+import { Alert, AlertTitle } from '@material-ui/lab';
 const hostname = process.env.NEXT_PUBLIC_NEXTAUTH_URL
 
 
@@ -216,6 +217,8 @@ export default function Edit({memory}) {
   const [this_id, setThisId] = useState(memory.data._id);
   const router = useRouter()
 const [old_data, setOldData]  = useState(memory.data)
+const [showAlert, setShowAlert] = useState(false)
+const [showAlert2, setShowAlert2] = useState(false)
   useEffect(()=>{
     const fetchData = async () => {
       const res = await fetch('/api/examples/protected')
@@ -235,7 +238,30 @@ const [old_data, setOldData]  = useState(memory.data)
 
 //================SAVE FORM FUNCTIONS===============
   const handleClickOpen = async() => {
-    setOpen(true);
+    let t_type = 0;
+    let answ = 0
+    questions.map(q => {
+      if(q.type === "") t_type++
+      if((q.type === "several" && q.answer.length === 0) || (q.type === "one" && q.answer.length === 0)){
+        answ++
+      }
+    })
+    if(t_type > 0){
+      setShowAlert(true)
+      setTimeout(() => {
+        setShowAlert(false);
+      }, 4000);
+    }
+    else if(answ > 0){
+      setShowAlert2(true)
+      setTimeout(() => {
+        setShowAlert2(false);
+      }, 4000);
+    }
+    else{
+      setOpen(true);
+    }
+   
   };
   const handleClickOpen2 = async() => {
     setOpen2(true);
@@ -254,14 +280,15 @@ let survey = {
 questions: questions,
 comment: comment,
 }
+
 let r_id = router.query.id
-console.log("Survey", survey)
+console.log("Survey122222222", survey)
 let data3 = await axios.delete(`${hostname}/${r_id}`).catch(err=>console.log(err))
 let data = await axios.put(`${hostname}/api/changer/${r_id}`, {
   survey
 }).catch(err=>console.log(err))
 console.log("Post", data3)
-// router.push(`/library/${session.user.email}`);
+router.push(`/library/${session.user.email}`);
     setOpen(false);
   }
 
@@ -507,6 +534,7 @@ setShowComment(!state_now)
 
   return (
     <Layout >
+      {console.log("MEMORY", memory)}
       <Card style={{display: 'flex', 
     justifyContent: 'center',
     alignItems: 'center', flexDirection: 'column', padding: '1em 2em'}}>
@@ -561,9 +589,16 @@ setShowComment(!state_now)
           </Tooltip>
           
         </CardActions>
-     
         </div>
-  
+
+       {showAlert  ?<Alert severity="error" style={{ width: '100%', marginBottom: '1em'}}>
+        <AlertTitle>Error</AlertTitle>
+       <strong>Choose a type of answer, it can't be a blank!</strong>
+      </Alert> :('')}
+      {showAlert2  ?<Alert severity="error" style={{ width: '100%', marginBottom: '1em'}} severity="error">
+        <AlertTitle>Error</AlertTitle>
+       <strong>Add options for a muliple choices question, it can't be a blank</strong>
+      </Alert> :('')}
         {showComment ?<div style={{ width: '100%',  border: '1px solid rgb(63, 81, 181)', }}>   <FormControl style={{display: 'flex', flexDirection: 'row', width: '100%', minWidth: '100%', margin: 0, padding: 0, justifyContent: 'flexStart', alignItems: 'flexStart', float: 'left !important'}}  fullWidth>
         
                  
