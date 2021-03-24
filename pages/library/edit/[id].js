@@ -219,6 +219,7 @@ export default function Edit({memory}) {
 const [old_data, setOldData]  = useState(memory.data)
 const [showAlert, setShowAlert] = useState(false)
 const [showAlert2, setShowAlert2] = useState(false)
+const [showAlert3, setShowAlert3] = useState(false)
   useEffect(()=>{
     const fetchData = async () => {
       const res = await fetch('/api/examples/protected')
@@ -239,14 +240,40 @@ const [showAlert2, setShowAlert2] = useState(false)
 //================SAVE FORM FUNCTIONS===============
   const handleClickOpen = async() => {
     let t_type = 0;
-    let answ = 0
-    questions.map(q => {
+    let answ = 0;
+    let quest = 0;
+    let all_quest = 0;
+    console.log('Quest', questions)
+    questions.forEach(q => {
+      if(q.type === "" && q.quest === ''){
+        console.log('YES, g=here')
+        all_quest++;
+       return;
+      }
       if(q.type === "") t_type++
+      if(q.quest === "") quest++
       if((q.type === "several" && q.answer.length === 0) || (q.type === "one" && q.answer.length === 0)){
         answ++
       }
     })
-    if(t_type > 0){
+    console.log('TYPE', t_type)
+    console.log("answ", answ)
+    console.log('quest', quest)
+    console.log('all', all_quest)
+    if(all_quest > 0) {
+   
+        let questions2 = questions.filter(q => ((q.type !== '') && (q.quest !== '')))
+        setQuestions(questions2)
+        setOpen(true);
+    
+    }
+    else if(quest  > 0){
+      setShowAlert3(true)
+      setTimeout(() => {
+        setShowAlert3(false);
+      }, 4000);
+    }
+     else if(t_type > 0){
       setShowAlert(true)
       setTimeout(() => {
         setShowAlert(false);
@@ -258,9 +285,7 @@ const [showAlert2, setShowAlert2] = useState(false)
         setShowAlert2(false);
       }, 4000);
     }
-    else{
-      setOpen(true);
-    }
+
    
   };
   const handleClickOpen2 = async() => {
@@ -591,6 +616,11 @@ setShowComment(!state_now)
         </CardActions>
         </div>
 
+         
+        {showAlert3  ?<Alert severity="error" style={{ width: '100%', marginBottom: '1em'}}>
+        <AlertTitle>Error</AlertTitle>
+       <strong>Question can't be an empty space!</strong>
+      </Alert> :('')}
        {showAlert  ?<Alert severity="error" style={{ width: '100%', marginBottom: '1em'}}>
         <AlertTitle>Error</AlertTitle>
        <strong>Choose a type of answer, it can't be a blank!</strong>

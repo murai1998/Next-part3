@@ -64,16 +64,18 @@ const List2 =({handleClick01, handleClick02, handleChange, handleChange2, handle
         title={<Typography variant="h4" component="h5" style={{borderBottom: '0.1px solid rgb(118, 118, 118)'}}>
        {title}
       </Typography>}
-      subheader={ <Typography style={{color: '#333', fontWeight: 500, background: '#f5005717', padding: '1em 0'}} variant="div" component="h6">
+      subheader={<> <Typography style={{color: '#333', fontWeight: 500, background: '#f5005717', padding: '1em 0'}} variant="div" component="h6">
       {comment}
-      </Typography>}
-      />
-     
-       <form  noValidate autoComplete="off">
-     {showAlert  ?<Alert severity="error">
+      </Typography>
+      {showAlert  ?<Alert style={{padding: '1em 2em'}} variant="outlined" severity="error">
         <AlertTitle>Error</AlertTitle>
        <strong>Please, fill out all fields carefully!</strong>
       </Alert> :('')}
+      </>}
+      />
+     
+       <form  noValidate autoComplete="off">
+       
     
       {questions.map((x, index) =>{
              return( <CardContent>
@@ -273,10 +275,8 @@ const copyToClipboard = (e, loc) => {
 
 
 const handleSubmit= async(e)=>{
+  e.preventDefault()
   let r_id = router.query.id
-
-e.preventDefault()
-setShowForm(false)
 let index = 0;
 newAnswers.forEach(y =>{
   if(y.answers){
@@ -285,13 +285,19 @@ index++
     }
   }
 })
-console.log('Length', listIt.questions.length)
+console.log('Length', listIt.questions.length, index)
 if(index !== listIt.questions.length){
+  console.log("NOT qqual")
   setShowAlert(true)
+  setTimeout(() => {
+    setShowAlert(false)
+  }, 4000);
+ 
   return
 }
+
 else{
-  setShowAlert(false)
+  setShowForm(false)
 let ans = [...newAnswers]
 // ans.map(y =>{
 //   if(y.type === "several"){
@@ -304,8 +310,6 @@ let ans = [...newAnswers]
    let data = await axios.post(`${hostname}/api/answers/${r_id}`, {
     send_obj
 }).catch(err=>console.log(err))
-
- 
 }
 }
 

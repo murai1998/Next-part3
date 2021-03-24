@@ -18,17 +18,22 @@ export default function Page () {
     const classes = useStyles();
   return (
     <Layout>
-       <center><Card style={{padding: '1em'}}>
-     <p style={{fontSize: '1.2em', fontWeight: 500}}> If you have any questions or concerns, please do not hesitate to contact us.<br></br> We are always happy to help you</p>
+   <style>
+@import url('https://fonts.googleapis.com/css2?family=Abel&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Architects+Daughter&display=swap');
+</style>
+       <center><Card  style={{padding: '1em', fontFamily: 'Architects Daughter, cursive'}}>
+     <p style={{fontSize: '1.3em', fontWeight: 500}}> If you have any questions or concerns, please do not hesitate to contact us.<br></br><br></br> <strong style={{fontSize: '1.1em'}}>We are always here to help you</strong></p>
      <br></br>
-     <div >
-   <p style={{color: 'rgba(0, 0, 0, 0.54)', fontWeight: 700}}>You can find us here:</p>
+     <div style={{display: 'flex', justifyContent: 'center', alignItems: 'spaceAround'}}>
   
-   <div  className={classes.root}>
-      <Link href="https://github.com/murai1998" ><GitHubIcon fontSize="large"/></Link>
-      <Link style={{marginLeft: '1em !important'}} href="https://www.linkedin.com/in/hmurai"><LinkedInIcon fontSize="large"  color="primary" /></Link>
+  
+
+      <div><Link href="https://github.com/murai1998" ><GitHubIcon fontSize="large"/></Link></div>
+     
+      <div style={{marginLeft: '1em'}}><Link style={{marginLeft: '3em !important'}} href="https://www.linkedin.com/in/hmurai"><LinkedInIcon fontSize="large"  color="primary" /></Link></div>
     </div>
-    </div>
+   
     </Card></center>
     </Layout>
   )

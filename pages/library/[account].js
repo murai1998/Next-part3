@@ -86,14 +86,15 @@ export default function Library ({list}) {
     <Layout >
       <style>
 @import url('https://fonts.googleapis.com/css2?family=Reggae+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Architects+Daughter&display=swap');
 </style>
-      <p style={{fontFamily: 'Reggae One, cursive', marginTop: 0, color: '#f50057', padding: '1em 0.5em 0', fontSize: '1.6em', textAlign: 'center'}}>Your Library</p>
+      <p style={{fontFamily: 'Architects Daughter, cursive', marginTop: 0, color: '#f50057', padding: '1em 0.5em 0', fontSize: '2.3em', textAlign: 'center'}}>Your Library</p>
       <TableContainer component={Paper}>
       <Table  size="small" aria-label="a dense table">
         <TableHead >
           <TableRow >
-          <StyledTableCell style={{color: 'rgb(63, 81, 181)', fontSize: '1.3em', fontWeight: 700, fontFamily: 'Reggae One, cursive'}} align="center">#</StyledTableCell>
-            <StyledTableCell style={{color: 'rgb(63, 81, 181)', fontSize: '1.3em', fontWeight: 700, fontFamily: 'Reggae One, cursive'}} align="left">Title</StyledTableCell>
+          <StyledTableCell style={{color: 'rgb(63, 81, 181)', fontSize: '1.8em', fontWeight: 700, fontFamily: 'Architects Daughter, cursive'}} align="center">#</StyledTableCell>
+            <StyledTableCell style={{color: 'rgb(63, 81, 181)', fontSize: '1.8em', fontWeight: 700, fontFamily: 'Architects Daughter, cursive'}} align="left">Title</StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
