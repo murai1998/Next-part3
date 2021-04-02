@@ -143,7 +143,7 @@ export default function Library ({list}) {
 
 
 Library.getInitialProps = async({query: {account}})=>{
-const res = await axios.get(`http://localhost:3000/api/creator/${account}`)
+const res = await axios.get(`https://first-step911.herokuapp.com/api/creator/${account}`)
 .catch(err=>console.log(err))
     return {list: res.data}
 }
