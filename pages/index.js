@@ -122,7 +122,7 @@ export default function Page() {
             </Button>
           
            <Card>
-           <CardContent>
+           <CardContent style={{marginBottom: '3em', marginTop: '2em'}}>
         {/* <Typography className={classes.title} color="textSecondary" gutterBottom>
           Word of the Day
         </Typography> */}
@@ -169,7 +169,7 @@ export default function Page() {
 @import url('https://fonts.googleapis.com/css2?family=Architects+Daughter&display=swap');
 </style>
          <div style={{display: 'flex',  alignItems: 'center', flexDirection: 'column'}}>
-          <p style={{ paddingTop: "2em",  textAlign: 'center',  lineHeight: '1.5em', fontSize: '1.1em'}}><span style={{fontFamily: 'Architects Daughter, cursive', fontSize: '1.4em'}}><span style={{lineHeight: '1.5em'}}><span style={{fontWeight: 700, fontSize: '1.1em'}}>Hello, {session.user.name}.</span><br></br> Thank you for joining us. Creating forms and surveys never seems easier than with </span></span> </p>
+          <p style={{ paddingTop: "1.5em",  textAlign: 'center',  lineHeight: '1.5em', fontSize: '1.1em'}}><span style={{fontFamily: 'Architects Daughter, cursive', fontSize: '1.4em'}}><span style={{lineHeight: '1.5em'}}><span style={{fontWeight: 700, fontSize: '1.1em'}}>Hello, {session.user.name}.</span><br></br> Thank you for joining us. Creating forms and surveys never seems easier than with </span></span> </p>
       
           <div style={{margin: 0}}><img src="/logo.jpg" alt="me" style={{width: '246.33px', height: '173.46px'}} /></div>
           </div>

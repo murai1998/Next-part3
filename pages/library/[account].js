@@ -84,14 +84,20 @@ export default function Library ({list}) {
   // If session exists, display content
   return (
     <Layout >
+      <div >
+        <div style={{margin: 0, float: 'right', marginTop: '1em'}}><img style={{ float: 'right'}} src="/steps2.png" alt="me" style={{width: '5em', height: '5em'}} /></div>
       <style>
 @import url('https://fonts.googleapis.com/css2?family=Reggae+One&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Architects+Daughter&display=swap');
 </style>
-      <p style={{fontFamily: 'Architects Daughter, cursive', marginTop: 0, color: '#f50057', padding: '1em 0.5em 0', fontSize: '2.3em', textAlign: 'center'}}>Your Library</p>
+    
+     </div>
       <TableContainer component={Paper}>
+      <center><h3 style={{color: 'rgb(63, 81, 181)', fontSize: '1.9em', padding: '0.1em', margin: 0, fontWeight: 700, fontFamily: 'Architects Daughter, cursive'}} >Next Library</h3></center>
       <Table  size="small" aria-label="a dense table">
         <TableHead >
+
+    
           <TableRow >
           <StyledTableCell style={{color: 'rgb(63, 81, 181)', fontSize: '1.8em', fontWeight: 700, fontFamily: 'Architects Daughter, cursive'}} align="center">#</StyledTableCell>
             <StyledTableCell style={{color: 'rgb(63, 81, 181)', fontSize: '1.8em', fontWeight: 700, fontFamily: 'Architects Daughter, cursive'}} align="left">Title</StyledTableCell>
@@ -130,6 +136,7 @@ export default function Library ({list}) {
         </TableBody>
       </Table>
     </TableContainer>
+    <div style={{margin: 0}}><img src="/steps1.png" alt="me" style={{width: '7em', height: '7em'}} /></div>
     </Layout>
   )
 }
