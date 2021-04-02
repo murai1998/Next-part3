@@ -168,10 +168,13 @@ export default function Page() {
 @import url('https://fonts.googleapis.com/css2?family=Reggae+One&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Architects+Daughter&display=swap');
 </style>
-          <p style={{paddingTop: "2em", fontSize: '1.8em', textAlign: 'center', color: '#f50057', fontFamily: 'Architects Daughter, cursive' }}>Hello, {session.user.name}. Thank you for joining us. </p>
-          <p style={{fontSize: '1.2em', textAlign: 'center',   }}><span style={{fontFamily: 'Architects Daughter, cursive', fontSize: '1.4em'}}>Creating forms and surveys never seems easier than with <span style={{color: "rgb(63, 81, 181)", fontWeight: 700}}>NextStep</span>.</span><br></br><br></br> Our app gives you the ability to complete a variety of different tasks within a couple of clicks for free. No matter what browser you use or how complex your form is, NextStep is here to help you!</p>
+         <div style={{display: 'flex',  alignItems: 'center', flexDirection: 'column'}}>
+          <p style={{ paddingTop: "2em",  textAlign: 'center',  lineHeight: '1.5em', fontSize: '1.1em'}}><span style={{fontFamily: 'Architects Daughter, cursive', fontSize: '1.4em'}}><span style={{lineHeight: '1.5em'}}><span style={{fontWeight: 700, fontSize: '1.1em'}}>Hello, {session.user.name}.</span><br></br> Thank you for joining us. Creating forms and surveys never seems easier than with </span></span> </p>
+      
+          <div style={{margin: 0}}><img src="/logo.jpg" alt="me" style={{width: '246.33px', height: '173.46px'}} /></div>
+          </div>
           </Layout>
-         
+          
       )} 
 
 
