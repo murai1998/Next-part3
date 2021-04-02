@@ -27,7 +27,7 @@ import { AutoComplete } from 'antd';
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
-      {'Copyright © '}
+      {'Copyright ©  '}
      
         NextStep
       
@@ -176,7 +176,6 @@ export default function Page() {
           </Layout>
           
       )} 
-
 
       
  </>
