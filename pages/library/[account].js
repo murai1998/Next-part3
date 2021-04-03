@@ -16,9 +16,9 @@ const hostname = process.env.NEXT_PUBLIC_NEXTAUTH_URL
 
 const List2 =({list})=>{
 if(list){
-  console.log('This list', list)
+
   if(list.success === true){
-    console.log('TIME', list)
+  
     return list.data.map((x, i) => (
       <TableRow key={i}>
         <TableCell style={{ fontSize: '1.1em'}}  align="center" component="th" scope="row">

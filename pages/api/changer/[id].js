@@ -21,7 +21,7 @@ if(!survey) res.status(400).json({ success: false });
         break;
     case 'PUT':
         try {
-            console.log("Survey", req.body.survey)
+       
             const survey = await Survey.findByIdAndUpdate(id, req.body.survey, {new: true, runValidators: true});
            
             if(!survey) res.status(400).json({ success: false });
@@ -32,7 +32,7 @@ if(!survey) res.status(400).json({ success: false });
         break;
         case 'DELETE':
             try {
-                console.log('IIIIDD', id)
+            
                 const survey = await Survey.deleteOne({_id: id});
     if(!survey) res.status(400).json({ success: false });
                 res.status(200).json({ success: true, data: {} })

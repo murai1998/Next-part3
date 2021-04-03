@@ -47,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Question = ({ questions, changeQuestion, deleteQuestion, handleType, changeAnswer, deleteAnswer, addAnswer, classes }) => {
   return questions.map((x, i) => {
-    console.log('All', x)
+
     return (
       <Card style={{minWidth: '100%', width: '100%', marginBottom: '1.5em', display: 'flex', flexDirection: 'column', border: '1px solid rgb(63, 81, 181)'}} key={i} variant="outlined">
         <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flexStart', alignItems: 'flexStart',  padding: '1em '}}>
@@ -229,7 +229,7 @@ const [showAlert3, setShowAlert3] = useState(false)
       memory.data.questions.forEach(x =>{
        if( new_index < x.id) new_index = x.id
       })
-      console.log("New Index", memory.data)
+    
       setComment(memory.data.comment)
       setId(new_index + 1) 
     }
@@ -243,10 +243,10 @@ const [showAlert3, setShowAlert3] = useState(false)
     let answ = 0;
     let quest = 0;
     let all_quest = 0;
-    console.log('Quest', questions)
+
     questions.forEach(q => {
       if(q.type === "" && q.quest === ''){
-        console.log('YES, g=here')
+
         all_quest++;
        return;
       }
@@ -256,10 +256,7 @@ const [showAlert3, setShowAlert3] = useState(false)
         answ++
       }
     })
-    console.log('TYPE', t_type)
-    console.log("answ", answ)
-    console.log('quest', quest)
-    console.log('all', all_quest)
+
     if(all_quest > 0) {
    
         let questions2 = questions.filter(q => ((q.type !== '') && (q.quest !== '')))
@@ -307,12 +304,12 @@ comment: comment,
 }
 
 let r_id = router.query.id
-console.log("Survey122222222", survey)
+
 let data3 = await axios.delete(`${hostname}/${r_id}`).catch(err=>console.log(err))
 let data = await axios.put(`${hostname}/api/changer/${r_id}`, {
   survey
 }).catch(err=>console.log(err))
-console.log("Post", data3)
+
 router.push(`/library/${session.user.email}`);
     setOpen(false);
   }
@@ -325,13 +322,13 @@ router.push(`/library/${session.user.email}`);
     questions: questions,
     comment: comment,
     }
-    console.log("Export", survey)
+
     let r_id = router.query.id
-    console.log("Survey", survey)
+
     let data = await axios.put(`${hostname}/api/changer/${r_id}`, {
       survey
     }).catch(err=>console.log(err))
-    console.log("KKK2", memory.data._id)
+
     router.push(`/library/export/${memory.data._id}`);
         setOpen(false);
 
@@ -344,11 +341,11 @@ router.push(`/library/${session.user.email}`);
     comment: comment,
     }
     let r_id = router.query.id
-    console.log("Survey", survey)
+
     let data = await axios.put(`${hostname}/api/changer/${r_id}`, {
       survey
     }).catch(err=>console.log(err))
-    console.log("KKK", memory.data._id)
+
     router.push(`/library/answers/${memory.data._id}`);
         setOpen(false);
 
@@ -559,7 +556,7 @@ setShowComment(!state_now)
 
   return (
     <Layout >
-      {console.log("MEMORY", memory)}
+
       <Card style={{display: 'flex', 
     justifyContent: 'center',
     alignItems: 'center', flexDirection: 'column', padding: '1em 2em'}}>

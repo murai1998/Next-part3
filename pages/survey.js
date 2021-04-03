@@ -90,12 +90,12 @@ const Question = ({ questions, changeQuestion, deleteQuestion, handleType, chang
           </Select>
           {/* <FormHelperText>Select Type of Response</FormHelperText> */}
         </FormControl>
-        {console.log("Type", x.type)}
+
         {(() => {
           switch (x.type) {
             case "one":
               return x.answer.map((y) => {
-                console.log("array of answers", y);
+      
                 if (y) {
                   return (
                     <Typography>
@@ -123,7 +123,7 @@ const Question = ({ questions, changeQuestion, deleteQuestion, handleType, chang
 
             case "several":
               return x.answer.map((y) => {
-                console.log("array of answers", y);
+              
                 if (y) {
                   return (
                     <Typography>
@@ -270,15 +270,15 @@ console.log("DATTA", data)
         return x;
       }
     });
-    console.log("ANFF", found);
+
     if (found.length > 0) {
       let found2 = [];
       found2 = found[0].answer.filter((y) => y.double_v !== double_id);
 
-      console.log("jjjj", found2);
+
       found[0].answer = found2;
       all_q.splice(index, 1, found[0]);
-      console.log("FFF", all_q);
+
       setQuestions(all_q);
     }
   };
@@ -286,7 +286,7 @@ console.log("DATTA", data)
   //==============CHANGE ANSWER==============
   const changeAnswer = (e, id, double_id) => {
     let all_q = [...questions];
-    console.log(all_q);
+
     let index = 0;
     let found = [];
     found = all_q.filter((x, i) => {
@@ -309,11 +309,11 @@ console.log("DATTA", data)
         }
       });
 
-      console.log("jjjj", found2);
+
       found[0].answer = found2;
 
       all_q.splice(index, 1, found[0]);
-      console.log("FFF", all_q);
+
       setTimeout(() => setQuestions(all_q), 5000);
     }
   };
@@ -335,7 +335,7 @@ console.log("DATTA", data)
       found[0].type = e.target.value;
       found[0].answer = [];
       all_q.splice(index, 1, found[0]);
-      console.log("TYpe", all_q);
+
       setQuestions(all_q);
     }
   };
@@ -343,7 +343,7 @@ console.log("DATTA", data)
 
   //============CHANGE COMMENT===============
   const addComment = (e) => {
-      console.log(',,', e.target.value)
+
     setComment(e.target.value);
   };
 
@@ -356,7 +356,7 @@ console.log("DATTA", data)
 
   //=============AND MULTIPLE ANSWERS==============
   const addAnswer = (e, id) => {
-    console.log("id ", id);
+
     let all_q = [...questions];
     let index = 0;
     let found = [];
@@ -368,7 +368,7 @@ console.log("DATTA", data)
       }
     });
     if (found.length > 0) {
-      console.log("Fooo", found[0]);
+
       found[0].answer.push({
         double_v: double_id,
         option: "",

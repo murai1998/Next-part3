@@ -12,11 +12,11 @@ const {
 switch (method) {
     case 'GET':
         try {
-            console.log('Id', id)
+   
             const answers = await Answers.find({form_id: id});
             const answers2 = await Answers.find();
-            console.log('ddd', answers2)
-            console.log('AAAA', answers)
+
+    
 if(!answers) res.status(400).json({ success: false });
             res.status(200).json({ success: true, data: answers })
         } catch (error) {
@@ -34,9 +34,9 @@ if(!answers) res.status(400).json({ success: false });
 //         break;
         case 'DELETE':
             try {
-                console.log('dddd', id)
+            
                 const answers = await Answers.deleteMany({form_id: id});
-                console.log("DELTE", answers)
+
     if(!answers) res.status(400).json({ success: false });
                 res.status(200).json({ success: true, data: answers})
             } catch (error) {
@@ -49,7 +49,7 @@ if(!answers) res.status(400).json({ success: false });
                 form_id: id,
                 answers: req.body.send_obj.answers
             }
-            console.log(req.body)
+       
             const answers = await Answers.create(new_answers);
             res.status(201).json({ success: true, data: answers })
         } catch (error) {

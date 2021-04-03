@@ -41,7 +41,7 @@ export default function Library ({list}) {
       const res = await fetch('/api/examples/protected')
       const json = await res.json()
       if (json.content) { setContent(json.content) }
-     console.log('list.data', list.data)
+
   
    
    
@@ -75,7 +75,7 @@ export default function Library ({list}) {
 
     if(list){
         let obj2 = {}
-      console.log('This list', list.data)
+  
     
       if(list.success === true ){
         let new_obj = {columns: [], rows: []};
@@ -102,7 +102,7 @@ export default function Library ({list}) {
       new_obj.columns[i+1].width  = 250
     }
       })}
-      console.log('HERE@', new_obj)
+
     return new_obj
       
       }
@@ -115,7 +115,7 @@ export default function Library ({list}) {
     }
     }
     let values = table_data(list)
-    console.log('DATA', values)
+
   // When rendering client side don't display anything until loading is complete
   if (typeof window !== 'undefined' && loading) return null
 
@@ -174,6 +174,6 @@ Library.getInitialProps = async({query: {id}})=>{
   // ${process.env.NEXTAUTH_URL}
 const res = await axios.get(`${hostname}/api/answers/${id}`)
 .catch(err=>console.log(err))
-console.log(res.data)
+
     return {list: res.data}
 }

@@ -285,9 +285,9 @@ index++
     }
   }
 })
-console.log('Length', listIt.questions.length, index)
+
 if(index !== listIt.questions.length){
-  console.log("NOT qqual")
+
   setShowAlert(true)
   setTimeout(() => {
     setShowAlert(false)
@@ -330,7 +330,7 @@ let ans = [...newAnswers]
   //if (!session) { return  <Layout><AccessDenied/></Layout> }
 
   // If session exists, display content
-console.log('CHECK list', list)
+
   return (
  
     <Layout style={{}}>
